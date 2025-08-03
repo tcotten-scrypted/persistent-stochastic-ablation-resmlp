@@ -1,0 +1,15 @@
+# Ignore dynamically generated model files
+*.safetensors
+
+# Ignore other common model file formats
+*.pth
+*.pt
+*.ckpt
+*.bin
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Allow this .gitignore file to be tracked
+!.gitignore 

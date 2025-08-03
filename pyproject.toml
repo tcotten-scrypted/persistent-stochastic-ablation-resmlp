@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = "Source code for the mini-paper 'Beyond Pruning and Dropout: Evolving Robust Networks via Persistent Stochastic Ablation'"
+authors = ["Tim Cotten <tcotten@scrypted.ai>", "Tim Cotten <tcotten2@gmu.edu>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+torch = "^2.7.1"
+torchvision = "^0.22.1"
+rich = "^14.1.0"
+safetensors = "^0.5.3"
+
+[tool.poetry.scripts]
+train = "src.train_psa_simplemlp:main"
+clean = "scripts.clean:main"
+clean-all = "scripts.clean_all:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
