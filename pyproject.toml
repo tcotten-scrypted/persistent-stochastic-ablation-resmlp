@@ -25,6 +25,8 @@ clean = "scripts.clean:main"
 clean-all = "scripts.clean_all:main"
 generate-reproduction-tests = "scripts.generate_reproduction_tests:main"
 sagemaker-results-parser = "aws.sagemaker.results_parser:main"
+make-architecture-table = "scripts.make_table_architectures:main"
+make-trial-accuracy-table = "scripts.make_table_trial_accuracy:main"
 
 [build-system]
 requires = ["poetry-core"]

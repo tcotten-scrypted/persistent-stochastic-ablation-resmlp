@@ -217,6 +217,37 @@ poetry run sagemaker-results-parser
 - `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
 - `results/psa_simplemlp_trials.md` - Raw trial data in markdown tables
 
+## Documentation
+
+This repository includes comprehensive documentation for different aspects of the project:
+
+### [REPRODUCTION.md](REPRODUCTION.md) - Research Reproduction Guide
+
+A detailed guide for reproducing the experimental results from the mini-paper:
+
+- **Background & Methodology**: Explanation of Persistent Stochastic Ablation (PSA) and the Frustration Engine meta-learning framework
+- **Experimental Design**: Details on the four ablation modes (none, full, hidden, output) and behavioral regimes
+- **Reproduction Steps**: Step-by-step instructions for validating all 59 architectural configurations
+- **Multi-Trial Validation**: Instructions for running 10 trials per configuration for statistical significance
+- **AWS SageMaker Automation**: Documentation of cloud-based automation scripts for large-scale experimentation
+- **Expected Results**: Summary of the four behavioral regimes and their characteristics
+
+### [TOOLS.md](TOOLS.md) - Utility Scripts Reference
+
+A comprehensive reference for all utility scripts and tools:
+
+- **Architecture Analysis**: `make_table_architectures.py` - Generate LaTeX tables of network architectures and parameter counts
+- **Results Analysis**: `make_table_trial_accuracy.py` - Create publication-ready LaTeX tables from experimental results with statistical information
+- **Usage Examples**: Both direct Python and Poetry command examples for each tool
+- **Output Formats**: Sample LaTeX output and formatting details
+- **Features**: Detailed descriptions of each tool's capabilities and options
+
+### Additional Documentation
+
+- **Training Scripts**: `clean.py`, `clean_all.py` - Model checkpoint management
+- **Reproduction Tools**: `generate_reproduction_tests.py` - Automated command generation
+- **AWS Integration**: SageMaker automation and results parsing tools
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
