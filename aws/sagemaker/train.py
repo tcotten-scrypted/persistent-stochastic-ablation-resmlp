@@ -1,10 +1,11 @@
-# 001_train_psa_simplemlp.py
+# train.py - SageMaker Version
 #
 # Author: Tim Cotten @cottenio <tcotten@scrypted.ai, tcotten2@gmu.edu> 
 #
 # Description:
 # A comprehensive training harness for testing architectural variations and four
 # distinct live ablation strategies on the MNIST dataset.
+# Adapted for AWS SageMaker execution with environment-specific modifications.
 #
 # Core Concepts:
 # 1. Four Ablation Modes:
@@ -33,7 +34,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, TensorDataset
 from torchvision import datasets, transforms
 
 import argparse
@@ -93,6 +94,7 @@ class Config:
     LOG_INTERVAL: int = 20
     DEBUG: bool = False
     NUM_WORKERS: int = 4
+    NUM_RUNS: int = 1  # New field for number of experiment runs
 
     def getCheckpointPath(self) -> Path:
         return Path(self.MODEL_DIR) / self.CHECKPOINT_NAME
@@ -137,6 +139,7 @@ def get_config() -> Config:
     )
     parser.add_argument("--debug", action="store_true", help="Enable verbose debug logging.")
     parser.add_argument("--num-workers", type=int, default=4, help="DataLoader workers.")
+    parser.add_argument("--num-runs", type=int, default=1, help="Number of times to run the experiment for statistical analysis.")
     parser.add_argument("--device", type=str, choices=["cpu", "cuda", "mps"], 
                        help="Override device detection (cpu, cuda, mps)")
     args = parser.parse_args()
@@ -149,10 +152,10 @@ def get_config() -> Config:
         arch_string_for_display = f"[{'*'.join(map(str, [len(hidden_layers), hidden_layers[0]])) if len(set(hidden_layers)) == 1 else 'Custom'}]"
 
 
-    # Check for SageMaker environment variable
-    sagemaker_model_dir = os.environ.get("SAGEMAKER_MODEL_DIR")
-    if sagemaker_model_dir:
-        model_dir = Path(sagemaker_model_dir)
+    # SageMaker sets /opt/ml/model as the model directory
+    # Use this if we're in a SageMaker environment, otherwise use the provided path
+    if os.path.exists("/opt/ml/model"):
+        model_dir = Path("/opt/ml/model")
     else:
         model_dir = Path(args.model_dir)
     
@@ -171,6 +174,7 @@ def get_config() -> Config:
         ABLATION_MODE=args.ablation_mode,
         DEBUG=args.debug,
         NUM_WORKERS=args.num_workers,
+        NUM_RUNS=args.num_runs,
     )
     # Override device if specified
     if args.device:
@@ -336,12 +340,39 @@ def display_architecture_summary(model: SimpleMLP, config: Config, console: Cons
 
 
 def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader]:
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-    train_ds = datasets.MNIST("dataset", train=True, download=True, transform=transform)
-    test_ds = datasets.MNIST("dataset", train=False, download=True, transform=transform)
-    train_loader = DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True)
-    test_loader = DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
-    return train_loader, test_loader
+    """
+    MODIFIED for high-performance SageMaker training.
+    Loads the entire MNIST dataset into memory to eliminate I/O bottlenecks.
+    """
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
+
+    data_path = os.environ.get("SM_CHANNEL_TRAINING", "dataset")
+
+    # Step 1: Load the full dataset from disk/S3 channel ONCE.
+    # The 'download=True' will handle fetching it if not present.
+    full_train_dataset = datasets.MNIST(data_path, train=True, download=True, transform=transform)
+    full_test_dataset = datasets.MNIST(data_path, train=False, download=True, transform=transform)
+
+    # Step 2: Iterate through the datasets and pull everything into RAM.
+    # This creates two big tensors: one for images, one for labels.
+    train_images = torch.stack([img for img, _ in full_train_dataset])
+    train_labels = torch.tensor([label for _, label in full_train_dataset])
+
+    test_images = torch.stack([img for img, _ in full_test_dataset])
+    test_labels = torch.tensor([label for _, label in full_test_dataset])
+
+    # Step 3: Create new, in-memory TensorDatasets.
+    # The DataLoader will now read from these RAM-based tensors, which is lightning fast.
+    train_ds = TensorDataset(train_images, train_labels)
+    test_ds = TensorDataset(test_images, test_labels)
+
+    # Step 4: Return DataLoaders that now wrap the in-memory datasets.
+    # pin_memory=True is highly effective here as the data is already a tensor.
+    return DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True), \
+           DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
 
 # --- 4. Training & Evaluation Functions ---
 
@@ -375,49 +406,25 @@ def evaluate(model: nn.Module, loader: DataLoader, criterion: nn.Module, config:
 
 # --- 5. Main Orchestration ---
 
-def main():
-    config = get_config()
-    console = Console()
-    log = setup_logging(config.DEBUG, console)
-
+def run_single_experiment(config: Config, console: Console, log: logging.Logger) -> float:
+    """
+    Contains the logic for ONE full experimental run (100 meta-loops).
+    Returns the final best accuracy (bounty) for this single run.
+    """
     model = SimpleMLP(config).to(config.DEVICE)
     ablator = Ablator(model, config.ABLATION_MODE, log)
     optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
     criterion = nn.CrossEntropyLoss()
-    
-    console.print(Panel.fit(
-        "[bold magenta]Frustration Engine: MNIST Ablation Test[/bold magenta]",
-        subtitle=f"Ablation Mode: [yellow]{config.ABLATION_MODE}[/yellow] | Device: {config.DEVICE}"
-    ))
-    display_architecture_summary(model, config, console)
 
-    train_loader, test_loader = get_mnist_loaders(config)
     log.info(f"Model has {sum(p.numel() for p in model.parameters()):,} parameters.")
-    log.info(f"Training for {config.NUM_META_LOOPS} meta-loops.")
+    train_loader, test_loader = get_mnist_loaders(config)
 
     lkg_score, bounty = -1.0, -1.0
-    lkg_model_state = None
-    checkpoint_path = config.getCheckpointPath()
-
-    if checkpoint_path.exists():
-        log.info(f"Loading LKG checkpoint from {checkpoint_path}")
-        lkg_model_state = load_file(checkpoint_path, device=config.DEVICE)
-        model.load_state_dict(lkg_model_state)
-        with Progress(transient=True, console=console) as progress:
-           lkg_score = evaluate(model, test_loader, criterion, config, progress)
-        bounty = lkg_score
-        log.info(f"Resuming with LKG accuracy: {lkg_score:.2f}%")
-    else:
-        log.warning(f"No checkpoint found at {checkpoint_path}. Starting from scratch.")
-        lkg_model_state = model.state_dict()
-
+    lkg_model_state = model.state_dict()
     active_model_state = copy.deepcopy(lkg_model_state)
-    
+
     try:
-        with Progress(
-            TextColumn("[progress.description]{task.description}"), BarColumn(),
-            MofNCompleteColumn(), TimeRemainingColumn(), console=console
-        ) as progress:
+        with Progress(TextColumn("[progress.description]{task.description}"), BarColumn(), MofNCompleteColumn(), TimeRemainingColumn(), console=console) as progress:
             meta_loop_task = progress.add_task("[bold]Meta-Loops[/bold]", total=config.NUM_META_LOOPS)
             for loop in range(config.NUM_META_LOOPS):
                 model.load_state_dict(active_model_state)
@@ -426,37 +433,58 @@ def main():
                 progress.remove_task(train_task)
 
                 new_score = evaluate(model, test_loader, criterion, config, progress)
-                table = Table(show_header=False, box=None, padding=(0, 2))
-                table.add_row("Previous LKG Accuracy", f"[cyan]{lkg_score:.2f}%[/cyan]")
-                table.add_row("Current Loop Accuracy", f"[bold yellow]{new_score:.2f}%[/bold yellow]")
-
                 if new_score > lkg_score:
                     lkg_score, lkg_model_state = new_score, copy.deepcopy(model.state_dict())
-                    save_file(lkg_model_state, checkpoint_path)
-                    status, message = "[bold green]IMPROVEMENT[/bold green]", "New LKG. Checkpoint saved."
-                    if lkg_score > bounty:
-                        bounty = lkg_score
-                        message += f" 🏆 New Bounty: {bounty:.2f}%"
-                else:
-                    status, message = "[bold red]NO IMPROVEMENT[/bold red]", "Discarding weights."
-                console.print(Panel(table, title=f"Meta-Loop {loop + 1}/{config.NUM_META_LOOPS} Result", subtitle=status, border_style="blue"))
-                log.info(message)
+                    if lkg_score > bounty: bounty = lkg_score
                 
-                if config.ABLATION_MODE != 'none':
-                    log.info(f"Ablating LKG model for next loop (mode: {config.ABLATION_MODE})...")
-                    temp_model = SimpleMLP(config)
-                    temp_model.load_state_dict(lkg_model_state)
-                    active_model_state = ablator.ablate(temp_model)
-                else:
-                    active_model_state = copy.deepcopy(lkg_model_state)
+                log.info(f"Loop {loop + 1}/{config.NUM_META_LOOPS} | Current: {new_score:.2f}% | LKG: {lkg_score:.2f}% | Bounty: {bounty:.2f}%")
+
+                temp_model = SimpleMLP(config)
+                temp_model.load_state_dict(lkg_model_state)
+                active_model_state = ablator.ablate(temp_model) if config.ABLATION_MODE != 'none' else copy.deepcopy(lkg_model_state)
+                
                 progress.update(meta_loop_task, advance=1)
-                console.print("")
+
     except KeyboardInterrupt:
-        log.warning("\nTraining interrupted by user.")
+        log.warning("\nTraining run interrupted by user.")
     finally:
-        log.info(f"Final LKG model stored at: {checkpoint_path}")
-        log.info(f"🏆 Final Bounty (best accuracy achieved): {bounty:.2f}%")
-        console.print(Panel.fit(f"[bold green]✅ Training Finished. Final Bounty: {bounty:.2f}%[/bold green]"))
+        log.info(f"🏆 Run Finished. Final Bounty (best accuracy achieved): {bounty:.2f}%")
+        return bounty
+
+def main():
+    """Main orchestrator: sets up config and calls the experiment runner multiple times."""
+    config = get_config()
+    console = Console()
+    log = setup_logging(config.DEBUG, console)
+    all_bounties = []
+
+    console.print(Panel(f"[bold yellow]Executing {config.NUM_RUNS} runs for Arch: {config.ARCH_STRING}, Mode: {config.ABLATION_MODE}[/bold yellow]",
+                        subtitle=f"Device: {config.DEVICE}"))
+
+    for i in range(config.NUM_RUNS):
+        console.print(Panel(f"[magenta]Starting Run {i + 1} of {config.NUM_RUNS}[/magenta]"))
+        
+        # IMPORTANT: Ensure a clean slate for each run by removing the old checkpoint
+        checkpoint_path = config.getCheckpointPath()
+        if checkpoint_path.exists():
+            os.remove(checkpoint_path)
+            log.warning(f"Removed previous checkpoint to ensure clean run: {checkpoint_path}")
+
+        bounty = run_single_experiment(config, console, log)
+        all_bounties.append(bounty)
+
+    console.print(Panel.fit("[bold green]✅ All Runs for this Job Finished.[/bold green]"))
+    log.info(f"Collected Bounties: {all_bounties}")
+
+    # --- Save all results to a file that SageMaker will capture to S3 ---
+    try:
+        results_path = os.path.join(config.MODEL_DIR, "results.txt")
+        with open(results_path, 'w') as f:
+            for score in all_bounties:
+                f.write(f"{score:.2f}\n")
+        log.info(f"Saved all run results to {results_path} for parsing.")
+    except Exception as e:
+        log.error(f"Could not write final results for parsing: {e}")
 
 if __name__ == "__main__":
     main()

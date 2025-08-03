@@ -1,0 +1,11 @@
+safetensors
+rich
+python-dotenv
+boto3
+botocore
+torch
+torchvision
+sagemaker
+
+# Note: In SageMaker, torch and torchvision are already installed in the base image
+# These are included here for local testing and development

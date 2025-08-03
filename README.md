@@ -189,6 +189,34 @@ Alias for clean-all:
 poetry run clean-all  # Same as poetry run clean --all
 ```
 
+### Reproduction Tools
+
+Generate commands for reproducing all experimental configurations:
+```bash
+poetry run generate-reproduction-tests
+```
+
+This generates:
+- **Individual Commands**: All 59 architectures × 4 ablation modes
+- **Batch Script**: Executable `run_reproduction.sh` for automated execution
+- **Organized Output**: Commands grouped by architecture with clear headers
+
+### AWS SageMaker Integration
+
+Parse and analyze SageMaker training results:
+```bash
+poetry run sagemaker-results-parser
+```
+
+**Requirements:**
+- AWS credentials configured
+- `.env` file with AWS configuration in `aws/sagemaker/` (copy from `.env.example`)
+- S3 bucket access to configured bucket/prefix
+
+**Output Files:**
+- `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
+- `results/psa_simplemlp_trials.md` - Raw trial data in markdown tables
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
