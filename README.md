@@ -242,8 +242,8 @@ This repository includes comprehensive documentation for different aspects of th
 A detailed guide for reproducing the experimental results from the mini-paper:
 
 - **Background & Methodology**: Explanation of Persistent Stochastic Ablation (PSA) and the Frustration Engine meta-learning framework
-- **Experimental Design**: Details on the four ablation modes (none, full, hidden, output) and behavioral regimes
-- **Reproduction Steps**: Step-by-step instructions for validating all 59 architectural configurations
+- **Experimental Design**: Details on the six ablation modes (none, decay, dropout, full, hidden, output) and behavioral regimes
+- **Reproduction Steps**: Step-by-step instructions for validating all 98 architectural configurations
 - **Multi-Trial Validation**: Instructions for running 10 trials per configuration for statistical significance
 - **AWS SageMaker Automation**: Documentation of cloud-based automation scripts for large-scale experimentation
 - **Expected Results**: Summary of the four behavioral regimes and their characteristics

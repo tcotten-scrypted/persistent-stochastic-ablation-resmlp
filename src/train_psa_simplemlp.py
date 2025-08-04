@@ -7,7 +7,7 @@
 # distinct live ablation strategies on the MNIST dataset.
 #
 # Core Concepts:
-# 1. Four Ablation Modes:
+# 1. Six Ablation Modes:
 #    - 'none': Control group.
 #    - 'full': Partially ablates a neuron in ANY linear layer (hidden or output).
 #    - 'hidden': Fully ablates a neuron in a HIDDEN layer only.

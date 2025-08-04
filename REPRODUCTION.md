@@ -41,12 +41,12 @@ The study uses a flexible Multi-Layer Perceptron (MLP) architecture with:
 - Example: `[2*939]` = 2 layers of 939 neurons each
 
 ### Experimental Design
-The study explores 59 unique homogeneous architectures across three categories:
+The study explores 98 unique homogeneous architectures across three categories:
 1. **Shallow-and-wide**: `1*W` and `2*W` configurations
 2. **Deeper-and-square**: `L*L` configurations  
 3. **Deep-and-narrow**: `L*2` and `L*1` configurations
 
-Each architecture was tested with all four ablation modes over 10 independent trials with different random seeds.
+Each architecture was tested with all six ablation modes over 10 independent trials with different random seeds.
 
 ### Four Behavioral Regimes Identified
 
@@ -72,12 +72,12 @@ poetry install
 
 ### Validation Configurations
 
-The `reproduction/configurations.txt` file contains all 59 architectural configurations validated in the paper. This file will be used to systematically validate each configuration with all ablation modes.
+The `reproduction/configurations.txt` file contains all 98 architectural configurations validated in the paper. This file will be used to systematically validate each configuration with all ablation modes.
 
 **Configuration Categories:**
 - **Shallow-and-wide**: Lines 1-22 (`1*2048` through `2*4`)
 - **Deeper-and-square**: Lines 23-39 (`115*115` through `*1`)  
-- **Deep-and-narrow**: Lines 40-59 (`939*2` through `2*1`)
+- **Deep-and-narrow**: Lines 40-98 (`939*2` through `2*1`)
 
 ### Step 1: Validate Individual Configurations
 
@@ -172,8 +172,8 @@ For large-scale experimentation, we used AWS SageMaker to automate the running o
 
 ### Validation Checklist
 
-- [ ] All 59 configurations from `configurations.txt` tested
-- [ ] Each configuration tested with all 4 ablation modes
+- [ ] All 98 configurations from `configurations.txt` tested
+- [ ] Each configuration tested with all 6 ablation modes
 - [ ] 10 independent trials per configuration-mode combination
 - [ ] Results match expected regime classifications
 - [ ] Statistical significance calculations performed
@@ -210,7 +210,7 @@ The reproduction should confirm:
 4. **Parameter Matching**: Verify that matched-parameter architectures show similar trends
 
 ### Success Criteria
-- [ ] All 59 configurations reproduce within ±2% of published results
+- [ ] All 98 configurations reproduce within ±2% of published results
 - [ ] Regime classifications match published findings
 - [ ] Statistical significance aligns with paper conclusions
 - [ ] Ablation mode hierarchy confirmed across all valid architectures
