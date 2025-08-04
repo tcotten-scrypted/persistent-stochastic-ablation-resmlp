@@ -356,17 +356,20 @@ def display_architecture_summary(model: SimpleMLP, config: Config, console: Cons
 
 def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoader]:
     """
-    Create train/validation/test splits for MNIST:
+    Create train/validation/test splits for MNIST with optimized data loading:
     - Training: 50,000 images (from train=True)
     - Validation: 10,000 images (from train=True) 
     - Test: 10,000 images (from train=False)
+    
+    Optimized to load data into RAM once to eliminate I/O bottlenecks.
     """
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
     
-    # Load full training set (60k images)
+    # Load full datasets from disk ONCE
     full_train_ds = datasets.MNIST("dataset", train=True, download=True, transform=transform)
+    test_ds = datasets.MNIST("dataset", train=False, download=True, transform=transform)
     
-    # Split into train (50k) and validation (10k)
+    # Split training data into train (50k) and validation (10k)
     train_size = 50000
     val_size = 10000
     train_indices, val_indices = torch.utils.data.random_split(
@@ -374,16 +377,32 @@ def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoade
         generator=torch.Generator().manual_seed(1337)  # Fixed seed for reproducibility
     )
     
-    train_ds = torch.utils.data.Subset(full_train_ds, train_indices.indices)
-    val_ds = torch.utils.data.Subset(full_train_ds, val_indices.indices)
+    # Load all data into RAM as tensors (eliminates I/O bottlenecks)
+    train_images = torch.stack([full_train_ds[idx][0] for idx in train_indices.indices])
+    train_labels = torch.tensor([full_train_ds[idx][1] for idx in train_indices.indices])
     
-    # Load test set (10k images)
-    test_ds = datasets.MNIST("dataset", train=False, download=True, transform=transform)
+    val_images = torch.stack([full_train_ds[idx][0] for idx in val_indices.indices])
+    val_labels = torch.tensor([full_train_ds[idx][1] for idx in val_indices.indices])
     
-    # Create data loaders
-    train_loader = DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True)
-    val_loader = DataLoader(val_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
-    test_loader = DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
+    test_images = torch.stack([img for img, _ in test_ds])
+    test_labels = torch.tensor([label for _, label in test_ds])
+    
+    # Create in-memory TensorDatasets
+    train_dataset = torch.utils.data.TensorDataset(train_images, train_labels)
+    val_dataset = torch.utils.data.TensorDataset(val_images, val_labels)
+    test_dataset = torch.utils.data.TensorDataset(test_images, test_labels)
+    
+    # Create data loaders with optimized settings
+    # Use num_workers=0 for in-memory data to avoid overhead
+    # Disable pin_memory on MPS (not supported) and use smaller batch for validation
+    pin_memory = config.DEVICE == "cuda"  # Only use pin_memory for CUDA
+    
+    train_loader = DataLoader(train_dataset, batch_size=config.BATCH_SIZE, shuffle=True, 
+                             num_workers=0, pin_memory=pin_memory)
+    val_loader = DataLoader(val_dataset, batch_size=config.BATCH_SIZE * 2, shuffle=False, 
+                           num_workers=0, pin_memory=pin_memory)
+    test_loader = DataLoader(test_dataset, batch_size=config.BATCH_SIZE * 2, shuffle=False, 
+                            num_workers=0, pin_memory=pin_memory)
     
     return train_loader, val_loader, test_loader
 
