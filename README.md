@@ -6,63 +6,76 @@ Source code for the mini-paper "Beyond Pruning and Dropout: Evolving Robust Netw
 
 ### Poetry Installation
 
-This project uses [Poetry](https://python-poetry.org/) for dependency management. If you don't have Poetry installed, you can install it using one of the following methods:
+This project uses [Poetry](https://python-poetry.org/) for dependency management. Install Poetry using one of these methods:
 
-#### Option 1: Official Installer (Recommended)
+**Official Installer (Recommended):**
 ```bash
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-#### Option 2: pip
+**Alternative methods:**
 ```bash
 pip install poetry
+# or
+brew install poetry  # macOS
 ```
 
-#### Option 3: Homebrew (macOS)
-```bash
-brew install poetry
-```
-
-After installation, ensure Poetry is in your PATH. You may need to restart your terminal or run:
+After installation, ensure Poetry is in your PATH:
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ## Project Setup
 
-1. **Clone the repository:**
+1. **Clone and setup:**
    ```bash
    git clone git@github.com:tcotten-scrypted/persistent-stochastic-ablation-mlp.git
    cd persistent-stochastic-ablation-mlp
-   ```
-
-2. **Install dependencies:**
-   ```bash
    poetry install
    ```
-   
-   This will create a virtual environment in `.venv/` within the project directory.
 
-3. **Activate the virtual environment:**
+2. **Activate environment:**
    ```bash
    poetry shell
-   ```
-   
-   Or run commands directly with Poetry:
-   ```bash
-   poetry run train
+   # or run commands directly: poetry run train
    ```
 
 ## Project Structure
 
 ```
-├── src/           # source code
-├── scripts/       # utility and execution scripts
-├── aws/           # AWS-related configurations and scripts
-├── models/        # user-generated model files
-├── dataset/       # downloaded datasets
-├── results/       # experimental results
-└── pyproject.toml # Poetry configuration and dependencies     
+├── src/                    # Source code
+│   └── train_psa_simplemlp.py
+├── scripts/                # Utility and execution scripts
+│   ├── clean.py
+│   ├── clean_all.py
+│   ├── generate_reproduction_tests.py
+│   ├── make_table_architectures.py
+│   ├── make_table_trial_accuracy.py
+│   ├── make_figure_design_space.py
+│   └── make_figure_heatmaps.py
+├── aws/                    # AWS SageMaker integration
+│   └── sagemaker/
+│       ├── train.py
+│       ├── runner.py
+│       ├── results_parser.py
+│       ├── current_batch_configurations.txt
+│       └── requirements.txt
+├── models/                 # User-generated model files
+├── dataset/                # Downloaded datasets (MNIST)
+├── results/                # Experimental results and figures
+├── reproduction/           # Reproduction configurations
+│   └── configurations.txt
+├── .venv/                  # Poetry virtual environment
+├── pyproject.toml          # Poetry configuration and dependencies
+├── poetry.lock            # Locked dependencies
+├── poetry.toml            # Poetry settings
+├── run_reproduction.sh    # Generated reproduction script
+├── train.py               # Legacy training script
+├── README.md              # This file
+├── TOOLS.md               # Utility scripts documentation
+├── REPRODUCTION.md        # Reproduction guide
+├── LICENSE                # Apache 2.0 license
+└── .gitignore            # Git ignore rules
 ```
 
 ## Usage
@@ -79,11 +92,6 @@ poetry run train
 Train with custom architecture and ablation mode:
 ```bash
 poetry run train -- --arch "[4*4, 2*8]" --ablation-mode hidden --lr 1e-3
-```
-
-Train with custom batch size and meta-loops:
-```bash
-poetry run train -- --batch-size 512 --meta-loops 200 --ablation-mode full
 ```
 
 ### Available Parameters
@@ -105,7 +113,7 @@ The script automatically detects the best available device:
 - **Metal** (MPS): Apple Silicon (M1/M2/M3) chips
 - **CPU** (fallback): When no GPU acceleration is available
 
-You can override the device detection with `--device`:
+Override with `--device`:
 ```bash
 poetry run train -- --device cpu      # Force CPU
 poetry run train -- --device cuda     # Force CUDA
@@ -136,7 +144,7 @@ poetry run train -- --ablation-mode full --batch-size 128 --meta-loops 150 --deb
 
 ### Resuming Training
 
-The training script automatically resumes from the last known good (LKG) checkpoint if one exists. This allows you to:
+The training script automatically resumes from the last known good (LKG) checkpoint if one exists:
 
 **Continue training on the same architecture:**
 ```bash
@@ -152,13 +160,11 @@ poetry run train -- --arch "[1*1024]" --ablation-mode output
 
 **Important Notes:**
 - **Same Architecture**: You can resume training and even switch ablation modes on the same architecture
-- **Different Architecture**: If you change `--arch` or `--hidden-layers`, you must clean the checkpoint first:
+- **Different Architecture**: If you change `--arch`, you must clean the checkpoint first:
   ```bash
   poetry run clean  # Remove old checkpoint
   poetry run train -- --arch "[2*512]" --ablation-mode hidden  # Start fresh
   ```
-- **Checkpoint Location**: Models are saved as `models/mnist_lkg.safetensors`
-- **Resume Behavior**: Training automatically loads the LKG checkpoint and continues from where it left off
 
 ### Cleaning Model Files
 
@@ -170,36 +176,35 @@ poetry run clean
 Remove all files in the models directory:
 ```bash
 poetry run clean --all
+# or
+poetry run clean-all
 ```
 
 Remove specific files:
 ```bash
 poetry run clean file1.safetensors file2.safetensors
-poetry run clean models/file1.safetensors  # With models/ prefix
 ```
 
-Dry run (show what would be removed):
+### Analysis and Visualization Tools
+
+Generate LaTeX tables and figures for publication:
+
+**Architecture Analysis:**
 ```bash
-poetry run clean --dry-run
-poetry run clean --all --dry-run
+poetry run make-architecture-table      # Parameter counts and classifications
+poetry run make-trial-accuracy-table    # Experimental results with statistics
 ```
 
-Alias for clean-all:
+**Visualization:**
 ```bash
-poetry run clean-all  # Same as poetry run clean --all
+poetry run make-design-space-figure     # Design space scatter plot
+poetry run make-figure-heatmaps         # Five comprehensive heatmap visualizations
 ```
 
-### Reproduction Tools
-
-Generate commands for reproducing all experimental configurations:
+**Reproduction Tools:**
 ```bash
-poetry run generate-reproduction-tests
+poetry run generate-reproduction-tests  # Generate commands for all configurations
 ```
-
-This generates:
-- **Individual Commands**: All 59 architectures × 4 ablation modes
-- **Batch Script**: Executable `run_reproduction.sh` for automated execution
-- **Organized Output**: Commands grouped by architecture with clear headers
 
 ### AWS SageMaker Integration
 
@@ -211,7 +216,6 @@ poetry run sagemaker-results-parser
 **Requirements:**
 - AWS credentials configured
 - `.env` file with AWS configuration in `aws/sagemaker/` (copy from `.env.example`)
-- S3 bucket access to configured bucket/prefix
 
 **Output Files:**
 - `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
@@ -238,15 +242,10 @@ A comprehensive reference for all utility scripts and tools:
 
 - **Architecture Analysis**: `make_table_architectures.py` - Generate LaTeX tables of network architectures and parameter counts
 - **Results Analysis**: `make_table_trial_accuracy.py` - Create publication-ready LaTeX tables from experimental results with statistical information
+- **Visualization**: `make_figure_design_space.py` and `make_figure_heatmaps.py` - Generate design space plots and comprehensive heatmap visualizations
 - **Usage Examples**: Both direct Python and Poetry command examples for each tool
 - **Output Formats**: Sample LaTeX output and formatting details
 - **Features**: Detailed descriptions of each tool's capabilities and options
-
-### Additional Documentation
-
-- **Training Scripts**: `clean.py`, `clean_all.py` - Model checkpoint management
-- **Reproduction Tools**: `generate_reproduction_tests.py` - Automated command generation
-- **AWS Integration**: SageMaker automation and results parsing tools
 
 ## License
 
