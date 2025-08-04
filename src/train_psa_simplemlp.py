@@ -202,21 +202,37 @@ class SimpleMLP(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
         self.flatten = nn.Flatten()
+        self.config = config
         layers = []
         input_size = config.INPUT_SIZE
         if config.HIDDEN_LAYERS:
             for hidden_size in config.HIDDEN_LAYERS:
                 layers.append(nn.Linear(input_size, hidden_size))
                 layers.append(nn.ReLU())
-                # Add dropout after ReLU if using dropout mode
-                if config.ABLATION_MODE == "dropout":
-                    layers.append(nn.Dropout(config.DROPOUT_RATE))
+                # Always add dropout layers for consistent architecture
+                # They will be activated/deactivated during forward pass based on ablation mode
+                layers.append(nn.Dropout(config.DROPOUT_RATE))
                 input_size = hidden_size
         layers.append(nn.Linear(input_size, config.OUTPUT_SIZE))
         self.layer_stack = nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.layer_stack(self.flatten(x))
+        # Set dropout layers to eval mode if not using dropout ablation mode
+        if self.config.ABLATION_MODE != "dropout":
+            # Temporarily set all dropout layers to eval mode
+            dropout_layers = [layer for layer in self.layer_stack if isinstance(layer, nn.Dropout)]
+            original_modes = [layer.training for layer in dropout_layers]
+            for layer in dropout_layers:
+                layer.eval()
+        
+        result = self.layer_stack(self.flatten(x))
+        
+        # Restore original training modes
+        if self.config.ABLATION_MODE != "dropout":
+            for layer, original_mode in zip(dropout_layers, original_modes):
+                layer.train(original_mode)
+        
+        return result
 
 class Ablator:
     """Handles different modes of neuron ablation for deep networks."""
