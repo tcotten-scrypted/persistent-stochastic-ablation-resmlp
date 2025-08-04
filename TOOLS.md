@@ -111,4 +111,82 @@ python scripts/make_table_trial_accuracy.py --datafile results/my_results.md --o
 - **Winner Highlighting**: Bold formatting for winning modes
 - **Configurable Options**: Custom captions, labels, and file paths
 - **Error Handling**: Graceful handling of missing files
-- **Maintains Ordering**: Uses configuration file for consistent row ordering 
+- **Maintains Ordering**: Uses configuration file for consistent row ordering
+
+## Visualization
+
+### `make_figure_design_space.py`
+
+Generate design space visualization for SimpleMLP architectures.
+
+**Purpose**: Creates a logarithmic scatter plot showing the design space of all tested architectures, visualizing the relationship between network depth and width.
+
+**Usage**:
+```bash
+# Direct Python
+python scripts/make_figure_design_space.py
+
+# Poetry command
+poetry run make-design-space-figure
+
+# With custom files
+python scripts/make_figure_design_space.py --config-file reproduction/my_configs.txt --output-file results/my_plot.png
+```
+
+**Output**: High-resolution PNG file showing:
+- **Logarithmic Scale**: Both depth and width axes use log scale for better visualization
+- **Architecture Points**: Each tested architecture plotted as a rectangle
+- **Labels**: Architecture notation (e.g., "1×2048") displayed for each point
+- **Grid Lines**: Reference grid for easier reading of values
+- **Professional Formatting**: Publication-ready figure with proper labels and title
+
+**Input**: 
+- Reads from `reproduction/configurations.txt` (default)
+- Outputs to `results/SimpleMLP_Testing_Design_Space.png` (default)
+
+**Features**:
+- **Dynamic Configuration Loading**: Reads actual experimental configurations
+- **High-Resolution Output**: 300 DPI PNG suitable for publications
+- **Logarithmic Visualization**: Optimal for wide-ranging architectural parameters
+- **Error Handling**: Graceful handling of missing files and parsing errors
+- **Configurable Paths**: Custom input and output file locations
+- **Memory Management**: Proper cleanup of matplotlib resources
+
+### `make_figure_heatmaps.py`
+
+Generate comprehensive heat map visualizations for SimpleMLP design space.
+
+**Purpose**: Creates a suite of four data-driven heat map visualizations that tell a comprehensive story about the SimpleMLP design space under Persistent Stochastic Ablation (PSA).
+
+**Usage**:
+```bash
+# Direct Python
+python scripts/make_figure_heatmaps.py
+
+# Poetry command
+poetry run make-figure-heatmaps
+
+# With custom files
+python scripts/make_figure_heatmaps.py --config-file reproduction/my_configs.txt --trials-file results/my_trials.md --output-dir results/
+```
+
+**Output**: Four high-resolution PNG files:
+1. **Baseline Performance**: Raw performance of control models (viridis colormap)
+2. **Ablation Uplift**: Quantitative benefit/harm of PSA (coolwarm colormap)
+3. **Instability Map**: Trial-to-trial variance/chaos (magma colormap)
+4. **Winning Strategy**: Best-performing ablation mode per architecture (categorical)
+
+**Input**: 
+- Reads from `reproduction/configurations.txt` (default)
+- Reads from `results/psa_simplemlp_trials.md` (default)
+- Outputs to `results/` directory (default)
+
+**Features**:
+- **Comprehensive Analysis**: Four complementary visualizations for complete understanding
+- **Data-Driven**: Based on actual experimental trial data
+- **Statistical Rigor**: Uses mean and standard deviation calculations
+- **Professional Visualization**: High-resolution (300 DPI) publication-ready figures
+- **Logarithmic Scale**: Optimal for wide-ranging architectural parameters
+- **Memory Efficient**: Proper cleanup of matplotlib resources
+- **Configurable**: Custom input files and output directory
+- **Error Handling**: Graceful handling of missing files and parsing errors 
