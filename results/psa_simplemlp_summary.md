@@ -291,10 +291,10 @@ Results Shape {4*2} Parameters {1618}
 * Output: Mean=14.69% | Std=6.55% | Min=9.82% | Max=29.24% (n=10)
 
 Results Shape {2048*1} Parameters {4899}
-* None: FAILED_OR_INCOMPLETE
-* Full: FAILED_OR_INCOMPLETE
-* Hidden: FAILED_OR_INCOMPLETE
-* Output: FAILED_OR_INCOMPLETE
+* None: Mean=10.20% | Std=0.43% | Min=9.80% | Max=11.35% (n=10)
+* Full: Mean=10.23% | Std=0.81% | Min=8.92% | Max=11.35% (n=10)
+* Hidden: Mean=9.87% | Std=0.86% | Min=8.92% | Max=11.35% (n=10)
+* Output: Mean=10.46% | Std=0.45% | Min=10.10% | Max=11.35% (n=10)
 
 Results Shape {1024*1} Parameters {2851}
 * None: Mean=10.04% | Std=0.51% | Min=9.58% | Max=11.35% (n=10)
