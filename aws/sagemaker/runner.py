@@ -89,7 +89,7 @@ def main(args):
         print(f"🔴 FATAL ERROR: No configurations found in {CONFIG_FILE_PATH}")
         return
 
-    ablation_modes = ["none", "full", "hidden", "output"]
+    ablation_modes = args.ablation_modes
     
     print("✅ Starting State-Aware Batch Execution.")
     print(f"   Configurations: {architectures}")
@@ -126,6 +126,10 @@ def main(args):
                 "meta-loops": 100,
                 "num-runs": NUM_RUNS_PER_JOB,
             }
+            if mode == "decay":
+                hyperparameters["weight-decay"] = args.weight_decay
+            if mode == "dropout":
+                hyperparameters["dropout"] = args.dropout
 
             pytorch_estimator = PyTorch(
                 entry_point=ENTRY_SCRIPT,
@@ -170,6 +174,25 @@ if __name__ == "__main__":
         "--force-rerun",
         action="store_true",
         help="Launch all jobs even if they have already completed successfully."
+    )
+    parser.add_argument(
+        "--ablation-modes",
+        type=str,
+        nargs='+',
+        default=["none", "full", "hidden", "output"],
+        help="List of ablation modes to run (e.g. decay dropout)."
+    )
+    parser.add_argument(
+        "--weight-decay",
+        type=float,
+        default=1e-4,
+        help="Weight decay rate for decay mode."
+    )
+    parser.add_argument(
+        "--dropout",
+        type=float,
+        default=0.1,
+        help="Dropout rate for dropout mode."
     )
     args = parser.parse_args()
     main(args) 

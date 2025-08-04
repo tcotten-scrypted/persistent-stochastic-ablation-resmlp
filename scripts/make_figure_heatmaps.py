@@ -120,26 +120,35 @@ def parse_trial_data(trials_file: Path) -> dict:
 
 def calculate_summary_metrics(trial_results: dict) -> dict:
     """
-    Calculates mean and standard deviation for each ablation mode across all trials.
+    Calculates summary metrics from trial data.
     
     Args:
-        trial_results: The dictionary of parsed trial data.
-    
+        trial_results: Dictionary mapping architecture keys to trial data.
+        
     Returns:
-        A nested dictionary with summary statistics for each architecture.
+        Dictionary mapping architecture keys to summary metrics.
     """
     metrics = {}
-    for arch_key, trials in trial_results.items():
+    for arch, trials in trial_results.items():
         if not trials:
             continue
+            
+        # Calculate metrics for each mode
+        mode_metrics = {}
+        for mode in ['none', 'decay', 'dropout', 'full', 'hidden', 'output']:
+            if mode in trials[0]:  # Check if mode exists in first trial
+                values = [trial[mode] for trial in trials if mode in trial and trial[mode] is not None]
+                if values:
+                    mode_metrics[mode] = {
+                        'mean': np.mean(values),
+                        'std': np.std(values),
+                        'min': np.min(values),
+                        'max': np.max(values)
+                    }
         
-        metrics[arch_key] = {}
-        for mode in ['none', 'full', 'hidden', 'output']:
-            accuracies = [t[mode] for t in trials]
-            metrics[arch_key][mode] = {
-                'mean': np.mean(accuracies),
-                'std': np.std(accuracies)
-            }
+        if mode_metrics:
+            metrics[arch] = mode_metrics
+    
     return metrics
 
 def setup_plot(title: str) -> tuple[plt.Figure, plt.Axes]:
@@ -163,167 +172,160 @@ def save_and_close(fig: plt.Figure, output_file: Path):
     print(f"✅ Plot saved successfully to: {output_file}")
 
 def plot_baseline_performance(architectures: list, metrics: dict, output_file: Path):
-    """Plots the mean accuracy of the control 'none' mode."""
-    title = 'SimpleMLP Design Space: Baseline Performance (Control)'
-    fig, ax = setup_plot(title)
+    """Plot baseline performance (control model accuracy)."""
+    fig, ax = setup_plot("Baseline Performance (Control Model)")
     
-    depths = [arch[0] for arch in architectures]
-    widths = [arch[1] for arch in architectures]
-    accuracies = []
-    untrainable_mask = []
+    depths, widths = zip(*architectures)
     
-    for d, w in zip(depths, widths):
-        arch_key = f"{d}x{w}"
-        if arch_key in metrics:
-            m = metrics[arch_key]
-            # Check if all modes achieve ≤11.35% (untrainable)
-            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in ['none', 'full', 'hidden', 'output'])
-            untrainable_mask.append(all_untrainable)
-            
-            if all_untrainable:
-                accuracies.append(0)  # Placeholder value for untrainable
-            else:
-                accuracies.append(m['none']['mean'])
-        else:
-            accuracies.append(10)
-            untrainable_mask.append(False)
-
-    # Create custom color gradient: blue -> green
+    # Create custom colormap for baseline accuracy
     from matplotlib.colors import LinearSegmentedColormap
     colors = [COLORS['blue'], COLORS['bright_green']]  # Blue -> green
-    n_bins = 100
-    custom_cmap = LinearSegmentedColormap.from_list('baseline_gradient', colors, N=n_bins)
+    cmap = LinearSegmentedColormap.from_list('baseline_gradient', colors, N=100)
+    norm = plt.Normalize(vmin=11.35, vmax=100)  # Start from untrainable threshold
     
-    # Plot trainable architectures with color gradient
-    trainable_depths = [d for i, d in enumerate(depths) if not untrainable_mask[i]]
-    trainable_widths = [w for i, w in enumerate(widths) if not untrainable_mask[i]]
-    trainable_accuracies = [acc for i, acc in enumerate(accuracies) if not untrainable_mask[i]]
+    for depth, width in architectures:
+        arch_key = f"{depth}x{width}"
+        
+        if arch_key in metrics:
+            m = metrics[arch_key]
+            # Check if architecture is untrainable (all modes <= 11.35%)
+            available_modes = [mode for mode in ['none', 'decay', 'dropout', 'full', 'hidden', 'output'] if mode in m]
+            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in available_modes)
+            
+            if all_untrainable:
+                color = COLORS['black']
+            else:
+                # Use the 'none' mode for baseline performance
+                baseline_acc = m.get('none', {}).get('mean', 0)
+                color = cmap(norm(baseline_acc))
+            
+            ax.scatter(depth, width, c=[color], s=50, alpha=0.7)
+        else:
+            # Default for missing data
+            ax.scatter(depth, width, c=[COLORS['brown']], s=50, alpha=0.7)
     
-    if trainable_accuracies:  # Only plot if there are trainable architectures
-        sc = ax.scatter(trainable_depths, trainable_widths, c=trainable_accuracies, cmap=custom_cmap, s=120, edgecolors='black', linewidth=0.5, vmin=11.35, vmax=100)
-        cbar = fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.04)
-        cbar.set_label('Mean Accuracy of Control (%)', fontsize=12)
+    # Add legend for untrainable
+    ax.scatter([], [], c=[COLORS['black']], s=50, alpha=0.7, label='Untrainable')
+    ax.legend()
     
-    # Plot untrainable architectures as black
-    untrainable_depths = [d for i, d in enumerate(depths) if untrainable_mask[i]]
-    untrainable_widths = [w for i, w in enumerate(widths) if untrainable_mask[i]]
-    
-    if untrainable_depths:  # Only plot if there are untrainable architectures
-        ax.scatter(untrainable_depths, untrainable_widths, c=COLORS['black'], s=120, edgecolors='black', linewidth=0.5, label='Untrainable')
-        ax.legend(loc='upper right', fontsize=10)
+    ax.set_xlabel('Depth (# of layers)')
+    ax.set_ylabel('Width (neurons per layer)')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.grid(True, alpha=0.3)
     
     save_and_close(fig, output_file)
 
 def plot_ablation_effects(architectures: list, metrics: dict, trial_results: dict, output_file: Path):
-    """Plots the performance difference between the best ablation mode and control with statistical significance and effect size."""
-    title = 'SimpleMLP Design Space: Ablation Effects (Benefit/Harm)'
-    fig, ax = setup_plot(title)
-
-    from scipy import stats
-
-    depths = [arch[0] for arch in architectures]
-    widths = [arch[1] for arch in architectures]
-    colors = []
-    sizes = []
-    untrainable_mask = []
-
-    for d, w in zip(depths, widths):
-        arch_key = f"{d}x{w}"
-        if arch_key in trial_results and arch_key in metrics:
-            trials = trial_results[arch_key]
+    """Plot ablation effects with statistical significance."""
+    fig, ax = setup_plot("Ablation Effects (Statistical Significance)")
+    
+    for depth, width in architectures:
+        arch_key = f"{depth}x{width}"
+        
+        if arch_key in metrics and arch_key in trial_results:
             m = metrics[arch_key]
-            # Check if untrainable
-            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in ['none', 'full', 'hidden', 'output'])
-            untrainable_mask.append(all_untrainable)
+            trials = trial_results[arch_key]
+            
+            # Check if architecture is untrainable (all modes <= 11.35%)
+            available_modes = [mode for mode in ['none', 'decay', 'dropout', 'full', 'hidden', 'output'] if mode in m]
+            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in available_modes)
+            
             if all_untrainable:
-                colors.append(COLORS['black'])
-                sizes.append(120)
+                color = COLORS['black']
+                size = 50
             else:
-                uplifts = [max(trial['full'], trial['hidden'], trial['output']) - trial['none'] for trial in trials]
-                if len(uplifts) > 1 and np.std(uplifts) > 0:
-                    t_stat, p_value = stats.ttest_1samp(uplifts, 0)
-                    mean_uplift = np.mean(uplifts)
-                    effect_size = abs(mean_uplift) / np.std(uplifts)
-                    # Color
-                    if p_value < 0.05:
+                # Calculate uplift for each trial (comparing full ablation to none)
+                uplift_values = []
+                for trial in trials:
+                    if 'none' in trial and 'full' in trial:
+                        uplift = trial['full'] - trial['none']
+                        uplift_values.append(uplift)
+                
+                if uplift_values:
+                    # Perform t-test
+                    from scipy import stats
+                    t_stat, p_value = stats.ttest_1samp(uplift_values, 0)
+                    mean_uplift = np.mean(uplift_values)
+                    
+                    # Determine color based on significance and direction
+                    if p_value < 0.05:  # Significant
                         if mean_uplift > 0:
-                            colors.append(COLORS['bright_green'])  # Bright green
+                            color = COLORS['bright_green']  # Beneficial
                         else:
-                            colors.append(COLORS['red'])  # Red
+                            color = COLORS['red']  # Harmful
                     else:
-                        colors.append(COLORS['brown'])  # Brown
-                    # Size (normalize effect size: 60-200)
-                    normalized_size = 60 + (min(effect_size, 7) / 7) * 140
-                    sizes.append(normalized_size)
+                        color = COLORS['brown']  # Insignificant
+                    
+                    # Size based on effect magnitude (Cohen's d)
+                    effect_size = abs(mean_uplift) / np.std(uplift_values) if np.std(uplift_values) > 0 else 0
+                    size = 7.5 + (effect_size * 461.5)  # Scale to 7.5-469 range
                 else:
-                    colors.append(COLORS['brown'])  # Brown
-                    sizes.append(60)
+                    color = COLORS['brown']
+                    size = 50
+            
+            ax.scatter(depth, width, c=[color], s=size, alpha=0.7)
         else:
-            colors.append(COLORS['brown'])  # Brown
-            sizes.append(60)
-            untrainable_mask.append(False)
-
-    sc = ax.scatter(depths, widths, c=colors, s=sizes, edgecolors='black', linewidth=0.5)
-    # Add legend for color
-    from matplotlib.patches import Patch
+            # Default for missing data
+            ax.scatter(depth, width, c=[COLORS['brown']], s=50, alpha=0.7)
+    
+    # Add legend
     legend_elements = [
-        Patch(facecolor=COLORS['bright_green'], edgecolor='black', label='Beneficial'),
-        Patch(facecolor=COLORS['red'], edgecolor='black', label='Harmful'),
-        Patch(facecolor=COLORS['brown'], edgecolor='black', label='Insignificant'),
-        Patch(facecolor=COLORS['black'], edgecolor='black', label='Untrainable'),
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=COLORS['bright_green'], markersize=8, label='Beneficial'),
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=COLORS['red'], markersize=8, label='Harmful'),
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=COLORS['brown'], markersize=8, label='Insignificant'),
+        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=COLORS['black'], markersize=8, label='Untrainable')
     ]
-    ax.legend(handles=legend_elements, loc='upper right', fontsize=10)
+    ax.legend(handles=legend_elements)
+    
+    ax.set_xlabel('Depth (# of layers)')
+    ax.set_ylabel('Width (neurons per layer)')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.grid(True, alpha=0.3)
+    
     save_and_close(fig, output_file)
 
 def plot_instability(architectures: list, metrics: dict, output_file: Path):
-    """Plots the maximum standard deviation across all modes for each architecture."""
-    title = 'SimpleMLP Design Space: Instability (Chaos) Map'
-    fig, ax = setup_plot(title)
-
-    depths = [arch[0] for arch in architectures]
-    widths = [arch[1] for arch in architectures]
-    max_stds = []
-    untrainable_mask = []
+    """Plot instability (maximum standard deviation across modes)."""
+    fig, ax = setup_plot("Instability (Maximum Standard Deviation)")
     
-    for d, w in zip(depths, widths):
-        arch_key = f"{d}x{w}"
+    # Create custom colormap for instability
+    from matplotlib.colors import LinearSegmentedColormap
+    colors = [COLORS['deep_green'], COLORS['light_green'], COLORS['yellow'], COLORS['orange'], COLORS['red']]
+    cmap = LinearSegmentedColormap.from_list('instability_gradient', colors, N=100)
+    norm = plt.Normalize(vmin=0, vmax=5)  # Assuming max std is around 5%
+    
+    for depth, width in architectures:
+        arch_key = f"{depth}x{width}"
+        
         if arch_key in metrics:
             m = metrics[arch_key]
-            # Check if all modes achieve ≤11.35% (untrainable)
-            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in ['none', 'full', 'hidden', 'output'])
-            untrainable_mask.append(all_untrainable)
+            # Check if architecture is untrainable (all modes <= 11.35%)
+            available_modes = [mode for mode in ['none', 'decay', 'dropout', 'full', 'hidden', 'output'] if mode in m]
+            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in available_modes)
             
             if all_untrainable:
-                max_stds.append(0)  # Placeholder value for untrainable
+                color = COLORS['black']
             else:
-                max_stds.append(max(m['none']['std'], m['full']['std'], m['hidden']['std'], m['output']['std']))
+                # Calculate maximum standard deviation across all modes
+                max_std = max(m[mode]['std'] for mode in available_modes)
+                color = cmap(norm(max_std))
+            
+            ax.scatter(depth, width, c=[color], s=50, alpha=0.7)
         else:
-            max_stds.append(0)
-            untrainable_mask.append(False)
-
-    # Create custom color gradient: green (stable) -> yellow -> orange -> red (unstable)
-    from matplotlib.colors import LinearSegmentedColormap
-    colors = [COLORS['deep_green'], COLORS['light_green'], COLORS['yellow'], COLORS['orange'], COLORS['red']]  # Deep green -> light green -> yellow -> orange -> bright red
-    n_bins = 100
-    custom_cmap = LinearSegmentedColormap.from_list('stability_gradient', colors, N=n_bins)
+            # Default for missing data
+            ax.scatter(depth, width, c=[COLORS['brown']], s=50, alpha=0.7)
     
-    # Plot trainable architectures with color gradient
-    trainable_depths = [d for i, d in enumerate(depths) if not untrainable_mask[i]]
-    trainable_widths = [w for i, w in enumerate(widths) if not untrainable_mask[i]]
-    trainable_stds = [std for i, std in enumerate(max_stds) if not untrainable_mask[i]]
+    # Add legend for untrainable
+    ax.scatter([], [], c=[COLORS['black']], s=50, alpha=0.7, label='Untrainable')
+    ax.legend()
     
-    if trainable_stds:  # Only plot if there are trainable architectures
-        sc = ax.scatter(trainable_depths, trainable_widths, c=trainable_stds, cmap=custom_cmap, s=120, edgecolors='black', linewidth=0.5, vmin=0, vmax=30)
-        cbar = fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.04)
-        cbar.set_label('Maximum Standard Deviation (%)', fontsize=12)
-    
-    # Plot untrainable architectures as black
-    untrainable_depths = [d for i, d in enumerate(depths) if untrainable_mask[i]]
-    untrainable_widths = [w for i, w in enumerate(widths) if untrainable_mask[i]]
-    
-    if untrainable_depths:  # Only plot if there are untrainable architectures
-        ax.scatter(untrainable_depths, untrainable_widths, c=COLORS['black'], s=120, edgecolors='black', linewidth=0.5, label='Untrainable')
-        ax.legend(loc='upper right', fontsize=10)
+    ax.set_xlabel('Depth (# of layers)')
+    ax.set_ylabel('Width (neurons per layer)')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.grid(True, alpha=0.3)
     
     save_and_close(fig, output_file)
 
@@ -338,6 +340,8 @@ def plot_winning_strategy(architectures: list, metrics: dict, output_file: Path)
     # Updated color scheme with non-heat colors
     mode_colors = {
         'none': COLORS['brown'],      # Brown
+        'decay': COLORS['purple'],     # Purple
+        'dropout': COLORS['pink'],     # Pink
         'full': COLORS['purple'],      # Purple
         'hidden': COLORS['pink'],    # Pink
         'output': COLORS['cyan'],    # Blue
@@ -345,6 +349,8 @@ def plot_winning_strategy(architectures: list, metrics: dict, output_file: Path)
     }
     mode_labels = {
         'none': 'Control (None)', 
+        'decay': 'Weight Decay', 
+        'dropout': 'Dropout', 
         'full': 'Full Ablation', 
         'hidden': 'Hidden Ablation', 
         'output': 'Output Ablation',
@@ -358,7 +364,7 @@ def plot_winning_strategy(architectures: list, metrics: dict, output_file: Path)
         if arch_key in metrics:
             m = metrics[arch_key]
             # Check if all modes achieve ≤11.35% (untrainable)
-            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in ['none', 'full', 'hidden', 'output'])
+            all_untrainable = all(m[mode]['mean'] <= 11.35 for mode in ['none', 'decay', 'dropout', 'full', 'hidden', 'output'])
             if all_untrainable:
                 winner = 'untrainable'
             else:

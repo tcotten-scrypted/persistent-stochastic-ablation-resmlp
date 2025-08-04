@@ -114,7 +114,16 @@ def main():
     with open(CONFIG_FILE, 'r') as f:
         configs = [line.strip() for line in f if line.strip()]
         
-    ablation_modes = ["none", "full", "hidden", "output"]
+    # Dynamically determine ablation modes from S3 or configs
+    ablation_modes = set()
+    for config in configs:
+        # Try to find all modes for this config in S3
+        for mode in ["none", "decay", "dropout", "full", "hidden", "output"]:
+            result = get_job_results(s3_client, config, mode)
+            if not (isinstance(result, str) and result.startswith("NO_JOB_FOUND")):
+                ablation_modes.add(mode)
+    ablation_modes = sorted(list(ablation_modes), key=lambda x: ["none", "decay", "dropout", "full", "hidden", "output"].index(x) if x in ["none", "decay", "dropout", "full", "hidden", "output"] else 99)
+
     all_results = {}
 
     CONSOLE.print(f"🔍 Starting results collection from S3 Bucket: [bold cyan]{S3_BUCKET_NAME}/{S3_PREFIX}[/bold cyan]")
@@ -169,14 +178,14 @@ def main():
                 continue
 
             # Write table header
-            f.write("| Trial | None | Full | Hidden | Output |\n")
-            f.write("|:-----:|:----:|:----:|:------:|:------:|\n")
+            f.write("| Trial | " + " | ".join([mode.capitalize() for mode in ablation_modes]) + " |\n")
+            f.write("|:-----:" + ":----:|" * len(ablation_modes) + "\n")
             
             # Write table rows
             for i in range(max_trials):
                 row = [f"| {i+1} "]
                 for mode in ablation_modes:
-                    result = modes[mode]
+                    result = modes.get(mode, None)
                     if isinstance(result, dict) and i < len(result['scores']):
                         score = f"{result['scores'][i]:.2f}%"
                         row.append(f"| {score} ")

@@ -43,11 +43,20 @@ def generate_commands(config_file):
 
                 print(f"# Architecture: {arch} ({identifier})")
                 
-                for mode in ["none", "full", "hidden", "output"]:
+                for mode in ["none", "decay", "dropout", "full", "hidden", "output"]:
                     # Generate Poetry command with proper paths
                     cmd = (
                         f"poetry run train -- --arch \"{arch}\" "
                         f"--ablation-mode {mode} "
+                    )
+                    
+                    # Add mode-specific parameters
+                    if mode == "decay":
+                        cmd += f"--weight-decay 1e-4 "
+                    elif mode == "dropout":
+                        cmd += f"--dropout 0.1 "
+                    
+                    cmd += (
                         f"--meta-loops 100 "
                         f"--model-dir \"./models/{identifier}_{mode}/\" "
                         f"--debug"
@@ -92,14 +101,23 @@ def generate_batch_script(config_file, output_file="run_reproduction.sh"):
 
                     script.write(f"echo 'Testing architecture: {arch}'\n")
                     
-                    for mode in ["none", "full", "hidden", "output"]:
+                    for mode in ["none", "decay", "dropout", "full", "hidden", "output"]:
                         script.write(f"echo '  Running {mode} ablation mode...'\n")
                         cmd = (
                             f"poetry run train -- --arch \"{arch}\" "
                             f"--ablation-mode {mode} "
+                        )
+                        
+                        # Add mode-specific parameters
+                        if mode == "decay":
+                            cmd += f"--weight-decay 1e-4 "
+                        elif mode == "dropout":
+                            cmd += f"--dropout 0.1 "
+                        
+                        cmd += (
                             f"--meta-loops 100 "
                             f"--model-dir \"./models/{identifier}_{mode}/\" "
-                            f"--debug\n"
+                            f"--debug"
                         )
                         script.write(cmd)
                         script.write("echo '  Completed'\n\n")

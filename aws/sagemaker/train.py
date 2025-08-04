@@ -95,6 +95,10 @@ class Config:
     DEBUG: bool = False
     NUM_WORKERS: int = 4
     NUM_RUNS: int = 1  # New field for number of experiment runs
+    WEIGHT_DECAY: float = 1e-4
+    DROPOUT_RATE: float = 0.1
+    GLOBAL_META_LOOPS: int = 0  # Total meta-loops trained across all sessions
+    BOUNTY_META_LOOP: int = 0   # Global meta-loop where bounty was last improved
 
     def getCheckpointPath(self) -> Path:
         return Path(self.MODEL_DIR) / self.CHECKPOINT_NAME
@@ -134,14 +138,16 @@ def get_config() -> Config:
         help="A list of hidden layer sizes (used if --arch is not provided)."
     )
     parser.add_argument(
-        "--ablation-mode", type=str, default="none", choices=["none", "full", "hidden", "output"],
+        "--ablation-mode", type=str, default="none", choices=["none", "decay", "dropout", "full", "hidden", "output"],
         help="Set the ablation mode."
     )
     parser.add_argument("--debug", action="store_true", help="Enable verbose debug logging.")
     parser.add_argument("--num-workers", type=int, default=4, help="DataLoader workers.")
     parser.add_argument("--num-runs", type=int, default=1, help="Number of times to run the experiment for statistical analysis.")
     parser.add_argument("--device", type=str, choices=["cpu", "cuda", "mps"], 
-                       help="Override device detection (cpu, cuda, mps)")
+                         help="Override device detection (cpu, cuda, mps)")
+    parser.add_argument("--weight-decay", type=float, default=1e-4, help="Weight decay rate (only used with --ablation-mode decay)")
+    parser.add_argument("--dropout", type=float, default=0.1, help="Dropout rate (only used with --ablation-mode dropout)")
     args = parser.parse_args()
 
     if args.arch:
@@ -175,6 +181,8 @@ def get_config() -> Config:
         DEBUG=args.debug,
         NUM_WORKERS=args.num_workers,
         NUM_RUNS=args.num_runs,
+        WEIGHT_DECAY=args.weight_decay,
+        DROPOUT_RATE=args.dropout,
     )
     # Override device if specified
     if args.device:
@@ -201,6 +209,8 @@ class SimpleMLP(nn.Module):
             for hidden_size in config.HIDDEN_LAYERS:
                 layers.append(nn.Linear(input_size, hidden_size))
                 layers.append(nn.ReLU())
+                if config.ABLATION_MODE == "dropout":
+                    layers.append(nn.Dropout(config.DROPOUT_RATE))
                 input_size = hidden_size
         layers.append(nn.Linear(input_size, config.OUTPUT_SIZE))
         self.layer_stack = nn.Sequential(*layers)
@@ -339,9 +349,9 @@ def display_architecture_summary(model: SimpleMLP, config: Config, console: Cons
     console.print(table)
 
 
-def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader]:
+def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoader]:
     """
-    MODIFIED for high-performance SageMaker training.
+    MODIFIED for high-performance SageMaker training with proper train/validation/test splits.
     Loads the entire MNIST dataset into memory to eliminate I/O bottlenecks.
     """
     transform = transforms.Compose([
@@ -351,27 +361,39 @@ def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader]:
 
     data_path = os.environ.get("SM_CHANNEL_TRAINING", "dataset")
 
-    # Step 1: Load the full dataset from disk/S3 channel ONCE.
-    # The 'download=True' will handle fetching it if not present.
+    # Step 1: Load the full datasets from disk/S3 channel ONCE.
     full_train_dataset = datasets.MNIST(data_path, train=True, download=True, transform=transform)
-    full_test_dataset = datasets.MNIST(data_path, train=False, download=True, transform=transform)
+    test_dataset = datasets.MNIST(data_path, train=False, download=True, transform=transform)
 
-    # Step 2: Iterate through the datasets and pull everything into RAM.
-    # This creates two big tensors: one for images, one for labels.
-    train_images = torch.stack([img for img, _ in full_train_dataset])
-    train_labels = torch.tensor([label for _, label in full_train_dataset])
+    # Step 2: Split training data into train (50k) and validation (10k)
+    train_size = 50000
+    val_size = 10000
+    train_indices, val_indices = torch.utils.data.random_split(
+        range(len(full_train_dataset)), [train_size, val_size],
+        generator=torch.Generator().manual_seed(1337)  # Fixed seed for reproducibility
+    )
+    
+    train_subset = torch.utils.data.Subset(full_train_dataset, train_indices.indices)
+    val_subset = torch.utils.data.Subset(full_train_dataset, val_indices.indices)
 
-    test_images = torch.stack([img for img, _ in full_test_dataset])
-    test_labels = torch.tensor([label for _, label in full_test_dataset])
+    # Step 3: Iterate through the datasets and pull everything into RAM.
+    train_images = torch.stack([img for idx in train_indices.indices for img, _ in [full_train_dataset[idx]]])
+    train_labels = torch.tensor([label for idx in train_indices.indices for _, label in [full_train_dataset[idx]]])
+    
+    val_images = torch.stack([img for idx in val_indices.indices for img, _ in [full_train_dataset[idx]]])
+    val_labels = torch.tensor([label for idx in val_indices.indices for _, label in [full_train_dataset[idx]]])
+    
+    test_images = torch.stack([img for img, _ in test_dataset])
+    test_labels = torch.tensor([label for _, label in test_dataset])
 
-    # Step 3: Create new, in-memory TensorDatasets.
-    # The DataLoader will now read from these RAM-based tensors, which is lightning fast.
+    # Step 4: Create new, in-memory TensorDatasets.
     train_ds = TensorDataset(train_images, train_labels)
+    val_ds = TensorDataset(val_images, val_labels)
     test_ds = TensorDataset(test_images, test_labels)
 
-    # Step 4: Return DataLoaders that now wrap the in-memory datasets.
-    # pin_memory=True is highly effective here as the data is already a tensor.
+    # Step 5: Return DataLoaders that now wrap the in-memory datasets.
     return DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True), \
+           DataLoader(val_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True), \
            DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
 
 # --- 4. Training & Evaluation Functions ---
@@ -413,42 +435,76 @@ def run_single_experiment(config: Config, console: Console, log: logging.Logger)
     """
     model = SimpleMLP(config).to(config.DEVICE)
     ablator = Ablator(model, config.ABLATION_MODE, log)
-    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
     criterion = nn.CrossEntropyLoss()
 
     log.info(f"Model has {sum(p.numel() for p in model.parameters()):,} parameters.")
-    train_loader, test_loader = get_mnist_loaders(config)
+    train_loader, val_loader, test_loader = get_mnist_loaders(config)
 
     lkg_score, bounty = -1.0, -1.0
     lkg_model_state = model.state_dict()
     active_model_state = copy.deepcopy(lkg_model_state)
+    
+    # Initialize global tracking for this run (SageMaker jobs are isolated)
+    current_global_loops = 0
 
     try:
         with Progress(TextColumn("[progress.description]{task.description}"), BarColumn(), MofNCompleteColumn(), TimeRemainingColumn(), console=console) as progress:
             meta_loop_task = progress.add_task("[bold]Meta-Loops[/bold]", total=config.NUM_META_LOOPS)
             for loop in range(config.NUM_META_LOOPS):
+                current_global_loop = current_global_loops + loop + 1
                 model.load_state_dict(active_model_state)
+                
+                # Reset optimizer each meta-loop for fair comparison
+                # This ensures each meta-loop starts with a fresh optimizer state,
+                # providing a fair comparison between ablation strategies without
+                # momentum carryover from previous attempts.
+                if config.ABLATION_MODE == "decay":
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
+                    if loop == 0:  # Log once at the start
+                        log.info(f"🔧 Using weight decay: {config.WEIGHT_DECAY}")
+                elif config.ABLATION_MODE == "dropout":
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
+                    if loop == 0:  # Log once at the start
+                        log.info(f"🔧 Using dropout rate: {config.DROPOUT_RATE}")
+                else:
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
+                
                 train_task = progress.add_task("Training...", total=len(train_loader))
                 train_one_epoch(model, train_loader, optimizer, criterion, config, progress, train_task)
                 progress.remove_task(train_task)
 
-                new_score = evaluate(model, test_loader, criterion, config, progress)
+                new_score = evaluate(model, val_loader, criterion, config, progress)
                 if new_score > lkg_score:
                     lkg_score, lkg_model_state = new_score, copy.deepcopy(model.state_dict())
-                    if lkg_score > bounty: bounty = lkg_score
+                    if lkg_score > bounty: 
+                        bounty = lkg_score
+                        config.BOUNTY_META_LOOP = current_global_loop
                 
-                log.info(f"Loop {loop + 1}/{config.NUM_META_LOOPS} | Current: {new_score:.2f}% | LKG: {lkg_score:.2f}% | Bounty: {bounty:.2f}%")
+                log.info(f"Loop {loop + 1}/{config.NUM_META_LOOPS} (Global: {current_global_loop}) | Current: {new_score:.2f}% | LKG: {lkg_score:.2f}% | Bounty: {bounty:.2f}%")
 
                 temp_model = SimpleMLP(config)
                 temp_model.load_state_dict(lkg_model_state)
-                active_model_state = ablator.ablate(temp_model) if config.ABLATION_MODE != 'none' else copy.deepcopy(lkg_model_state)
+                if config.ABLATION_MODE not in ['none', 'decay', 'dropout']:
+                    active_model_state = ablator.ablate(temp_model)
+                else:
+                    active_model_state = copy.deepcopy(lkg_model_state)
                 
                 progress.update(meta_loop_task, advance=1)
 
     except KeyboardInterrupt:
         log.warning("\nTraining run interrupted by user.")
     finally:
-        log.info(f"🏆 Run Finished. Final Bounty (best accuracy achieved): {bounty:.2f}%")
+        # Update global meta-loop count for this run
+        current_global_loops += config.NUM_META_LOOPS
+        
+        # Final evaluation on test set
+        if lkg_model_state:
+            model.load_state_dict(lkg_model_state)
+            with Progress(transient=True, console=console) as progress:
+                final_test_accuracy = evaluate(model, test_loader, criterion, config, progress)
+            log.info(f"🧪 Final Test Accuracy: {final_test_accuracy:.2f}%")
+        
+        log.info(f"🏆 Run Finished. Final Bounty (validation accuracy): {bounty:.2f}% @ {config.BOUNTY_META_LOOP}/{current_global_loops}")
         return bounty
 
 def main():

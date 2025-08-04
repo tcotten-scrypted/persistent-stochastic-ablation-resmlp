@@ -1,4 +1,4 @@
-# 001_train_psa_simplemlp.py
+# train_psa_simplemlp.py
 #
 # Author: Tim Cotten @cottenio <tcotten@scrypted.ai, tcotten2@gmu.edu> 
 #
@@ -93,6 +93,10 @@ class Config:
     LOG_INTERVAL: int = 20
     DEBUG: bool = False
     NUM_WORKERS: int = 4
+    WEIGHT_DECAY: float = 1e-4  # Default weight decay rate
+    DROPOUT_RATE: float = 0.1   # Default dropout rate
+    GLOBAL_META_LOOPS: int = 0  # Total meta-loops trained across all sessions
+    BOUNTY_META_LOOP: int = 0   # Global meta-loop where bounty was last improved
 
     def getCheckpointPath(self) -> Path:
         return Path(self.MODEL_DIR) / self.CHECKPOINT_NAME
@@ -132,13 +136,18 @@ def get_config() -> Config:
         help="A list of hidden layer sizes (used if --arch is not provided)."
     )
     parser.add_argument(
-        "--ablation-mode", type=str, default="none", choices=["none", "full", "hidden", "output"],
+        "--ablation-mode", type=str, default="none", 
+        choices=["none", "decay", "dropout", "full", "hidden", "output"],
         help="Set the ablation mode."
     )
     parser.add_argument("--debug", action="store_true", help="Enable verbose debug logging.")
     parser.add_argument("--num-workers", type=int, default=4, help="DataLoader workers.")
     parser.add_argument("--device", type=str, choices=["cpu", "cuda", "mps"], 
                        help="Override device detection (cpu, cuda, mps)")
+    parser.add_argument("--weight-decay", type=float, default=Config.WEIGHT_DECAY, 
+                       help="Weight decay rate (only used with --ablation-mode decay)")
+    parser.add_argument("--dropout", type=float, default=Config.DROPOUT_RATE, 
+                       help="Dropout rate (only used with --ablation-mode dropout)")
     args = parser.parse_args()
 
     if args.arch:
@@ -171,6 +180,8 @@ def get_config() -> Config:
         ABLATION_MODE=args.ablation_mode,
         DEBUG=args.debug,
         NUM_WORKERS=args.num_workers,
+        WEIGHT_DECAY=args.weight_decay,
+        DROPOUT_RATE=args.dropout,
     )
     # Override device if specified
     if args.device:
@@ -197,6 +208,9 @@ class SimpleMLP(nn.Module):
             for hidden_size in config.HIDDEN_LAYERS:
                 layers.append(nn.Linear(input_size, hidden_size))
                 layers.append(nn.ReLU())
+                # Add dropout after ReLU if using dropout mode
+                if config.ABLATION_MODE == "dropout":
+                    layers.append(nn.Dropout(config.DROPOUT_RATE))
                 input_size = hidden_size
         layers.append(nn.Linear(input_size, config.OUTPUT_SIZE))
         self.layer_stack = nn.Sequential(*layers)
@@ -210,9 +224,14 @@ class Ablator:
         self.log = log
         self.mode = mode
         self.ablatable_targets = []
-        if self.mode == "hidden": self._index_hidden_neurons(model)
-        elif self.mode == "full": self._index_full_layers(model)
-        elif self.mode == "output": self._index_output_layer(model)
+        # Only set up ablation targets for actual ablation modes
+        if self.mode == "hidden": 
+            self._index_hidden_neurons(model)
+        elif self.mode == "full": 
+            self._index_full_layers(model)
+        elif self.mode == "output": 
+            self._index_output_layer(model)
+        # baseline modes (none, decay, dropout) don't need ablation targets
 
     def _index_full_layers(self, model: nn.Module):
         for name, module in model.named_modules():
@@ -335,13 +354,38 @@ def display_architecture_summary(model: SimpleMLP, config: Config, console: Cons
     console.print(table)
 
 
-def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader]:
+def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoader]:
+    """
+    Create train/validation/test splits for MNIST:
+    - Training: 50,000 images (from train=True)
+    - Validation: 10,000 images (from train=True) 
+    - Test: 10,000 images (from train=False)
+    """
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
-    train_ds = datasets.MNIST("dataset", train=True, download=True, transform=transform)
+    
+    # Load full training set (60k images)
+    full_train_ds = datasets.MNIST("dataset", train=True, download=True, transform=transform)
+    
+    # Split into train (50k) and validation (10k)
+    train_size = 50000
+    val_size = 10000
+    train_indices, val_indices = torch.utils.data.random_split(
+        range(len(full_train_ds)), [train_size, val_size],
+        generator=torch.Generator().manual_seed(1337)  # Fixed seed for reproducibility
+    )
+    
+    train_ds = torch.utils.data.Subset(full_train_ds, train_indices.indices)
+    val_ds = torch.utils.data.Subset(full_train_ds, val_indices.indices)
+    
+    # Load test set (10k images)
     test_ds = datasets.MNIST("dataset", train=False, download=True, transform=transform)
+    
+    # Create data loaders
     train_loader = DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True)
+    val_loader = DataLoader(val_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
     test_loader = DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
-    return train_loader, test_loader
+    
+    return train_loader, val_loader, test_loader
 
 # --- 4. Training & Evaluation Functions ---
 
@@ -382,7 +426,7 @@ def main():
 
     model = SimpleMLP(config).to(config.DEVICE)
     ablator = Ablator(model, config.ABLATION_MODE, log)
-    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
+    
     criterion = nn.CrossEntropyLoss()
     
     console.print(Panel.fit(
@@ -391,9 +435,12 @@ def main():
     ))
     display_architecture_summary(model, config, console)
 
-    train_loader, test_loader = get_mnist_loaders(config)
+    train_loader, val_loader, test_loader = get_mnist_loaders(config)
     log.info(f"Model has {sum(p.numel() for p in model.parameters()):,} parameters.")
     log.info(f"Training for {config.NUM_META_LOOPS} meta-loops.")
+    log.info(f"📊 Dataset splits: 50k train, 10k validation, 10k test")
+    log.info(f"🎯 Meta-loops use validation accuracy for LKG decisions")
+    log.info(f"🧪 Final test accuracy reported at completion")
 
     lkg_score, bounty = -1.0, -1.0
     lkg_model_state = None
@@ -401,12 +448,37 @@ def main():
 
     if checkpoint_path.exists():
         log.info(f"Loading LKG checkpoint from {checkpoint_path}")
-        lkg_model_state = load_file(checkpoint_path, device=config.DEVICE)
+        
+        # Try to load as torch.save format first (new format with metadata)
+        try:
+            checkpoint_data = torch.load(checkpoint_path, map_location=config.DEVICE)
+            if isinstance(checkpoint_data, dict) and 'model_state' in checkpoint_data:
+                # New format with metadata
+                lkg_model_state = checkpoint_data['model_state']
+                config.GLOBAL_META_LOOPS = checkpoint_data.get('global_meta_loops', 0)
+                config.BOUNTY_META_LOOP = checkpoint_data.get('bounty_meta_loop', 0)
+                log.info(f"Resuming from global meta-loop {config.GLOBAL_META_LOOPS}, bounty achieved at loop {config.BOUNTY_META_LOOP}")
+            else:
+                # Legacy torch.save format (just model state)
+                lkg_model_state = checkpoint_data
+                log.info("Legacy torch.save format detected - starting global meta-loop tracking from 0")
+        except Exception as e:
+            # Try safetensors format as fallback
+            try:
+                checkpoint_data = load_file(checkpoint_path, device=config.DEVICE)
+                # Legacy safetensors format (just model state)
+                lkg_model_state = checkpoint_data
+                log.info("Legacy safetensors format detected - starting global meta-loop tracking from 0")
+            except Exception as e2:
+                log.error(f"Failed to load checkpoint: {e2}")
+                log.warning(f"No valid checkpoint found at {checkpoint_path}. Starting from scratch.")
+                lkg_model_state = model.state_dict()
+        
         model.load_state_dict(lkg_model_state)
         with Progress(transient=True, console=console) as progress:
-           lkg_score = evaluate(model, test_loader, criterion, config, progress)
+           lkg_score = evaluate(model, val_loader, criterion, config, progress)
         bounty = lkg_score
-        log.info(f"Resuming with LKG accuracy: {lkg_score:.2f}%")
+        log.info(f"Resuming with LKG validation accuracy: {lkg_score:.2f}%")
     else:
         log.warning(f"No checkpoint found at {checkpoint_path}. Starting from scratch.")
         lkg_model_state = model.state_dict()
@@ -420,29 +492,55 @@ def main():
         ) as progress:
             meta_loop_task = progress.add_task("[bold]Meta-Loops[/bold]", total=config.NUM_META_LOOPS)
             for loop in range(config.NUM_META_LOOPS):
+                current_global_loop = config.GLOBAL_META_LOOPS + loop + 1
                 model.load_state_dict(active_model_state)
+                
+                # Reset optimizer each meta-loop for fair comparison
+                # This ensures each meta-loop starts with a fresh optimizer state,
+                # providing a fair comparison between ablation strategies without
+                # momentum carryover from previous attempts.
+                if config.ABLATION_MODE == "decay":
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
+                    if loop == 0:  # Log once at the start
+                        log.info(f"🔧 Using weight decay: {config.WEIGHT_DECAY}")
+                elif config.ABLATION_MODE == "dropout":
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
+                    if loop == 0:  # Log once at the start
+                        log.info(f"🔧 Using dropout rate: {config.DROPOUT_RATE}")
+                else:
+                    optimizer = optim.AdamW(model.parameters(), lr=config.LEARNING_RATE)
+                
                 train_task = progress.add_task("Training...", total=len(train_loader))
                 train_one_epoch(model, train_loader, optimizer, criterion, config, progress, train_task)
                 progress.remove_task(train_task)
 
-                new_score = evaluate(model, test_loader, criterion, config, progress)
+                new_score = evaluate(model, val_loader, criterion, config, progress)
                 table = Table(show_header=False, box=None, padding=(0, 2))
-                table.add_row("Previous LKG Accuracy", f"[cyan]{lkg_score:.2f}%[/cyan]")
-                table.add_row("Current Loop Accuracy", f"[bold yellow]{new_score:.2f}%[/bold yellow]")
+                table.add_row("Previous LKG Validation Accuracy", f"[cyan]{lkg_score:.2f}%[/cyan]")
+                table.add_row("Current Loop Validation Accuracy", f"[bold yellow]{new_score:.2f}%[/bold yellow]")
+                table.add_row("Global Meta-Loop", f"[bold blue]{current_global_loop}[/bold blue]")
 
                 if new_score > lkg_score:
                     lkg_score, lkg_model_state = new_score, copy.deepcopy(model.state_dict())
-                    save_file(lkg_model_state, checkpoint_path)
+                    # Save checkpoint with metadata
+                    # Use torch.save for the full checkpoint with metadata
+                    checkpoint_data = {
+                        'model_state': lkg_model_state,
+                        'global_meta_loops': config.GLOBAL_META_LOOPS + loop + 1,
+                        'bounty_meta_loop': config.BOUNTY_META_LOOP
+                    }
+                    torch.save(checkpoint_data, checkpoint_path)
                     status, message = "[bold green]IMPROVEMENT[/bold green]", "New LKG. Checkpoint saved."
                     if lkg_score > bounty:
                         bounty = lkg_score
-                        message += f" 🏆 New Bounty: {bounty:.2f}%"
+                        config.BOUNTY_META_LOOP = current_global_loop
+                        message += f" 🏆 New Bounty: {bounty:.2f}% @ {current_global_loop}"
                 else:
                     status, message = "[bold red]NO IMPROVEMENT[/bold red]", "Discarding weights."
-                console.print(Panel(table, title=f"Meta-Loop {loop + 1}/{config.NUM_META_LOOPS} Result", subtitle=status, border_style="blue"))
+                console.print(Panel(table, title=f"Meta-Loop {loop + 1}/{config.NUM_META_LOOPS} (Global: {current_global_loop})", subtitle=status, border_style="blue"))
                 log.info(message)
                 
-                if config.ABLATION_MODE != 'none':
+                if config.ABLATION_MODE not in ['none', 'decay', 'dropout']:
                     log.info(f"Ablating LKG model for next loop (mode: {config.ABLATION_MODE})...")
                     temp_model = SimpleMLP(config)
                     temp_model.load_state_dict(lkg_model_state)
@@ -454,9 +552,22 @@ def main():
     except KeyboardInterrupt:
         log.warning("\nTraining interrupted by user.")
     finally:
+        # Update global meta-loop count
+        config.GLOBAL_META_LOOPS += config.NUM_META_LOOPS
+        
+        # Final evaluation on test set
         log.info(f"Final LKG model stored at: {checkpoint_path}")
-        log.info(f"🏆 Final Bounty (best accuracy achieved): {bounty:.2f}%")
-        console.print(Panel.fit(f"[bold green]✅ Training Finished. Final Bounty: {bounty:.2f}%[/bold green]"))
+        log.info(f"🏆 Final Bounty (best validation accuracy achieved): {bounty:.2f}% @ {config.BOUNTY_META_LOOP}/{config.GLOBAL_META_LOOPS}")
+        
+        # Load the best model and evaluate on test set
+        if lkg_model_state:
+            model.load_state_dict(lkg_model_state)
+            with Progress(transient=True, console=console) as progress:
+                final_test_accuracy = evaluate(model, test_loader, criterion, config, progress)
+            log.info(f"🧪 Final Test Accuracy: {final_test_accuracy:.2f}%")
+            console.print(Panel.fit(f"[bold green]✅ Training Finished. Final Bounty (Validation): {bounty:.2f}% @ {config.BOUNTY_META_LOOP}/{config.GLOBAL_META_LOOPS} | Test: {final_test_accuracy:.2f}%[/bold green]"))
+        else:
+            console.print(Panel.fit(f"[bold green]✅ Training Finished. Final Bounty (Validation): {bounty:.2f}% @ {config.BOUNTY_META_LOOP}/{config.GLOBAL_META_LOOPS}[/bold green]"))
 
 if __name__ == "__main__":
     main()

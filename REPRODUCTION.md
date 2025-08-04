@@ -18,8 +18,10 @@ This study investigates whether **Persistent Stochastic Ablation (PSA)** can act
 4. Evaluate and update LKG if improved
 5. Repeat
 
-**Four Ablation Modes:**
-- **`none`**: Control group (no ablation)
+**Six Ablation Modes:**
+- **`none`**: Control group (no regularization)
+- **`decay`**: Traditional weight decay regularization
+- **`dropout`**: Traditional dropout regularization
 - **`full`**: Partially ablates a neuron in ANY linear layer (hidden or output)
 - **`hidden`**: Fully ablates a neuron in a HIDDEN layer only
 - **`output`**: Partially ablates a neuron in the OUTPUT layer only
@@ -79,11 +81,13 @@ The `reproduction/configurations.txt` file contains all 59 architectural configu
 
 ### Step 1: Validate Individual Configurations
 
-For each architecture in `configurations.txt`, run all four ablation modes:
+For each architecture in `configurations.txt`, run all six ablation modes:
 
 ```bash
 # Example: Validate 1*2048 architecture
 poetry run train -- --arch "[1*2048]" --ablation-mode none --meta-loops 100
+poetry run train -- --arch "[1*2048]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100
+poetry run train -- --arch "[1*2048]" --ablation-mode dropout --dropout 0.1 --meta-loops 100
 poetry run train -- --arch "[1*2048]" --ablation-mode full --meta-loops 100
 poetry run train -- --arch "[1*2048]" --ablation-mode hidden --meta-loops 100
 poetry run train -- --arch "[1*2048]" --ablation-mode output --meta-loops 100

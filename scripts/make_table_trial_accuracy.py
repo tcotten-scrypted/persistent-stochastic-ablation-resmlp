@@ -26,7 +26,7 @@ def parse_results_file(filepath):
     pattern = re.compile(r"Results Shape \{([\d\*]+)\} Parameters \{[\d,]+\}\n(.*?)\n\n", re.DOTALL)
     
     # Regex to parse each line of statistical data (Mean, Std, Min, Max)
-    line_pattern = re.compile(r"\* (None|Full|Hidden|Output): Mean=([\d\.]+)% \| Std=([\d\.]+)% \| Min=([\d\.]+)% \| Max=([\d\.]+)% \(n=\d+\)")
+    line_pattern = re.compile(r"\* (None|Decay|Dropout|Full|Hidden|Output): Mean=([\d\.]+)% \| Std=([\d\.]+)% \| Min=([\d\.]+)% \| Max=([\d\.]+)% \(n=\d+\)")
 
     for match in pattern.finditer(content):
         arch, data_block = match.groups()
@@ -54,16 +54,16 @@ def generate_latex_table(results, order, caption, label):
 \caption{""" + caption + r"""}
 \label{tab:""" + label + r"""}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{l l l l l l}
+\begin{tabular}{l l l l l l l l}
 \toprule
-\textbf{Architecture} & {\textbf{`none`}} & {\textbf{`full`}} & {\textbf{`hidden`}} & {\textbf{`output`}} & \textbf{Winner} \\
- & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & \\
+    \textbf{Architecture} & {\textbf{`none`}} & {\textbf{`decay`}} & {\textbf{`dropout`}} & {\textbf{`full`}} & {\textbf{`hidden`}} & {\textbf{`output`}} & \textbf{Winner} \\
+ & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & {Mean $\pm$ Std (\%)} & \\
 \midrule"""
     print(header)
 
     for arch in order:
         if arch in results:
-            modes = ['none', 'full', 'hidden', 'output']
+            modes = ['none', 'decay', 'dropout', 'full', 'hidden', 'output']
             arch_data = results[arch]
             
             mean_values = [arch_data.get(mode, {'mean': -1})['mean'] for mode in modes]

@@ -97,7 +97,7 @@ poetry run train -- --arch "[4*4, 2*8]" --ablation-mode hidden --lr 1e-3
 ### Available Parameters
 
 - `--arch`: Define architecture with string, e.g., `"[4*4, 2*8, 1*16]"`
-- `--ablation-mode`: Set ablation mode (`none`, `full`, `hidden`, `output`)
+- `--ablation-mode`: Set ablation mode (`none`, `decay`, `dropout`, `full`, `hidden`, `output`)
 - `--lr`: Learning rate (default: 1e-4)
 - `--batch-size`: Batch size for training (default: 256)
 - `--meta-loops`: Total meta-loops to run (default: 100)
@@ -105,6 +105,8 @@ poetry run train -- --arch "[4*4, 2*8]" --ablation-mode hidden --lr 1e-3
 - `--debug`: Enable verbose debug logging
 - `--num-workers`: DataLoader workers (default: 4)
 - `--device`: Override device detection (`cpu`, `cuda`, `mps`)
+- `--weight-decay`: Weight decay rate (default: 1e-4, only used with `decay` mode)
+- `--dropout`: Dropout rate (default: 0.1, only used with `dropout`)
 
 ### Device Detection
 
@@ -125,6 +127,16 @@ poetry run train -- --device mps      # Force Metal (Apple Silicon)
 **Control experiment (no ablation):**
 ```bash
 poetry run train -- --ablation-mode none
+```
+
+**Weight decay baseline:**
+```bash
+poetry run train -- --ablation-mode decay --weight-decay 1e-4
+```
+
+**Dropout baseline:**
+```bash
+poetry run train -- --ablation-mode dropout --dropout 0.2
 ```
 
 **Hidden layer ablation:**
