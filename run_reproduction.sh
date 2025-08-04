@@ -7,1122 +7,2059 @@ echo 'Starting reproduction tests...'
 
 echo 'Testing architecture: [1*2048]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*2048]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x2048_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2048]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x2048_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*2048]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x2048_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*2048]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x2048_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*2048]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x2048_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2048]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x2048_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*2048]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x2048_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2048]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x2048_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*2048]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x2048_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2048]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x2048_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*1024]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*1024]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x1024_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1024]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x1024_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*1024]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x1024_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*1024]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x1024_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*1024]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x1024_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1024]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x1024_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*1024]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x1024_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1024]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x1024_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*1024]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x1024_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1024]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x1024_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*512]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*512]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x512_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*512]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x512_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*512]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x512_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*512]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x512_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*512]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x512_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*512]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x512_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*512]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x512_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*512]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x512_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*512]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x512_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*512]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x512_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*256]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*256]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x256_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*256]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x256_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*256]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x256_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*256]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x256_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*256]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x256_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*256]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x256_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*256]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x256_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*256]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x256_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*256]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x256_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*256]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x256_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*128]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*128]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x128_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*128]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x128_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*128]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x128_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*128]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x128_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*128]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x128_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*128]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x128_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*128]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x128_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*128]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x128_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*128]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x128_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*128]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x128_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*64]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*64]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x64_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*64]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x64_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*64]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x64_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*64]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x64_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*64]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x64_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*64]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x64_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*64]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x64_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*64]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x64_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*64]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x64_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*64]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x64_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*32]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*32]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x32_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*32]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x32_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*32]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x32_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*32]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x32_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*32]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x32_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*32]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x32_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*32]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x32_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*32]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x32_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*32]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x32_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*32]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x32_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*16]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*16]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x16_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*16]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x16_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*16]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x16_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*16]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x16_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*16]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x16_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*16]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x16_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*16]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x16_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*16]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x16_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*16]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x16_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*16]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x16_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*8]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x8_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x8_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*8]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x8_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*8]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x8_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x8_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x8_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x8_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x8_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x8_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x8_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*4]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x4_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x4_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x4_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x4_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x4_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x4_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x4_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x4_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*939]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*939]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x939_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*939]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x939_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*939]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x939_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*939]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x939_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*939]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x939_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*939]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x939_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*939]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x939_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*939]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x939_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*939]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x939_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*939]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x939_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*588]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*588]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x588_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*588]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x588_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*588]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x588_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*588]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x588_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*588]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x588_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*588]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x588_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*588]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x588_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*588]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x588_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*588]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x588_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*588]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x588_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*354]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*354]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x354_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*354]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x354_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*354]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x354_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*354]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x354_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*354]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x354_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*354]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x354_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*354]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x354_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*354]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x354_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*354]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x354_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*354]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x354_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*214]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*214]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x214_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*214]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x214_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*214]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x214_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*214]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x214_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*214]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x214_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*214]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x214_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*214]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x214_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*214]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x214_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*214]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x214_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*214]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x214_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*115]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*115]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x115_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*115]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x115_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*115]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x115_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*115]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x115_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*115]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x115_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*115]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x115_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*115]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x115_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*115]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x115_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*115]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x115_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*115]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x115_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*59]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*59]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x59_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*59]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x59_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*59]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x59_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*59]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x59_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*59]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x59_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*59]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x59_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*59]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x59_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*59]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x59_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*59]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x59_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*59]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x59_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*30]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*30]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x30_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*30]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x30_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*30]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x30_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*30]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x30_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*30]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x30_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*30]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x30_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*30]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x30_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*30]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x30_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*30]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x30_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*30]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x30_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*16]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*16]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x16_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*16]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x16_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*16]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x16_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*16]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x16_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*16]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x16_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*16]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x16_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*16]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x16_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*16]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x16_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*16]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x16_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*16]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x16_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*8]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x8_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x8_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*8]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x8_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*8]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x8_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x8_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x8_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x8_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x8_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x8_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x8_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*4]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x4_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x4_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x4_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x4_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x4_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x4_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x4_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*632]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x632_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x632_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x632_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x632_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x632_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*632]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x632_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*425]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x425_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x425_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x425_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x425_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x425_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*425]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x425_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*280]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x280_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x280_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x280_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x280_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x280_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*280]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x280_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*185]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x185_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x185_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x185_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x185_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x185_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*185]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x185_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*119]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x119_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x119_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x119_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x119_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x119_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*119]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x119_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*76]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x76_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x76_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x76_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x76_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x76_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*76]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x76_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*47]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x47_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x47_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x47_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x47_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x47_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*47]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x47_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*29]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x29_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x29_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x29_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x29_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x29_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*29]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x29_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [4*17]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x17_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x17_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x17_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x17_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x17_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[4*17]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x17_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [115*115]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[115*115]" --ablation-mode none --meta-loops 100 --model-dir "./models/115x115_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*115]" --ablation-mode none --meta-loops 100 --model-dir "./models/115x115_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[115*115]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/115x115_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[115*115]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/115x115_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[115*115]" --ablation-mode full --meta-loops 100 --model-dir "./models/115x115_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*115]" --ablation-mode full --meta-loops 100 --model-dir "./models/115x115_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[115*115]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/115x115_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*115]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/115x115_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[115*115]" --ablation-mode output --meta-loops 100 --model-dir "./models/115x115_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*115]" --ablation-mode output --meta-loops 100 --model-dir "./models/115x115_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [91*91]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[91*91]" --ablation-mode none --meta-loops 100 --model-dir "./models/91x91_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[91*91]" --ablation-mode none --meta-loops 100 --model-dir "./models/91x91_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[91*91]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/91x91_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[91*91]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/91x91_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[91*91]" --ablation-mode full --meta-loops 100 --model-dir "./models/91x91_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[91*91]" --ablation-mode full --meta-loops 100 --model-dir "./models/91x91_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[91*91]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/91x91_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[91*91]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/91x91_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[91*91]" --ablation-mode output --meta-loops 100 --model-dir "./models/91x91_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[91*91]" --ablation-mode output --meta-loops 100 --model-dir "./models/91x91_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [71*71]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[71*71]" --ablation-mode none --meta-loops 100 --model-dir "./models/71x71_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[71*71]" --ablation-mode none --meta-loops 100 --model-dir "./models/71x71_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[71*71]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/71x71_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[71*71]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/71x71_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[71*71]" --ablation-mode full --meta-loops 100 --model-dir "./models/71x71_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[71*71]" --ablation-mode full --meta-loops 100 --model-dir "./models/71x71_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[71*71]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/71x71_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[71*71]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/71x71_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[71*71]" --ablation-mode output --meta-loops 100 --model-dir "./models/71x71_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[71*71]" --ablation-mode output --meta-loops 100 --model-dir "./models/71x71_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [56*56]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[56*56]" --ablation-mode none --meta-loops 100 --model-dir "./models/56x56_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[56*56]" --ablation-mode none --meta-loops 100 --model-dir "./models/56x56_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[56*56]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/56x56_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[56*56]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/56x56_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[56*56]" --ablation-mode full --meta-loops 100 --model-dir "./models/56x56_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[56*56]" --ablation-mode full --meta-loops 100 --model-dir "./models/56x56_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[56*56]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/56x56_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[56*56]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/56x56_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[56*56]" --ablation-mode output --meta-loops 100 --model-dir "./models/56x56_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[56*56]" --ablation-mode output --meta-loops 100 --model-dir "./models/56x56_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [44*44]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[44*44]" --ablation-mode none --meta-loops 100 --model-dir "./models/44x44_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[44*44]" --ablation-mode none --meta-loops 100 --model-dir "./models/44x44_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[44*44]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/44x44_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[44*44]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/44x44_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[44*44]" --ablation-mode full --meta-loops 100 --model-dir "./models/44x44_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[44*44]" --ablation-mode full --meta-loops 100 --model-dir "./models/44x44_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[44*44]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/44x44_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[44*44]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/44x44_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[44*44]" --ablation-mode output --meta-loops 100 --model-dir "./models/44x44_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[44*44]" --ablation-mode output --meta-loops 100 --model-dir "./models/44x44_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [35*35]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[35*35]" --ablation-mode none --meta-loops 100 --model-dir "./models/35x35_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[35*35]" --ablation-mode none --meta-loops 100 --model-dir "./models/35x35_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[35*35]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/35x35_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[35*35]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/35x35_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[35*35]" --ablation-mode full --meta-loops 100 --model-dir "./models/35x35_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[35*35]" --ablation-mode full --meta-loops 100 --model-dir "./models/35x35_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[35*35]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/35x35_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[35*35]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/35x35_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[35*35]" --ablation-mode output --meta-loops 100 --model-dir "./models/35x35_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[35*35]" --ablation-mode output --meta-loops 100 --model-dir "./models/35x35_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [32*32]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode none --meta-loops 100 --model-dir "./models/32x32_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/32x32_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/32x32_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode full --meta-loops 100 --model-dir "./models/32x32_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/32x32_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[32*32]" --ablation-mode output --meta-loops 100 --model-dir "./models/32x32_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [31*31]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode none --meta-loops 100 --model-dir "./models/31x31_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/31x31_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/31x31_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode full --meta-loops 100 --model-dir "./models/31x31_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/31x31_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[31*31]" --ablation-mode output --meta-loops 100 --model-dir "./models/31x31_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [30*30]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode none --meta-loops 100 --model-dir "./models/30x30_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/30x30_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/30x30_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode full --meta-loops 100 --model-dir "./models/30x30_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/30x30_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[30*30]" --ablation-mode output --meta-loops 100 --model-dir "./models/30x30_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [29*29]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode none --meta-loops 100 --model-dir "./models/29x29_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/29x29_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/29x29_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode full --meta-loops 100 --model-dir "./models/29x29_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/29x29_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[29*29]" --ablation-mode output --meta-loops 100 --model-dir "./models/29x29_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [28*28]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode none --meta-loops 100 --model-dir "./models/28x28_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/28x28_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/28x28_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode full --meta-loops 100 --model-dir "./models/28x28_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/28x28_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[28*28]" --ablation-mode output --meta-loops 100 --model-dir "./models/28x28_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [27*27]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode none --meta-loops 100 --model-dir "./models/27x27_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/27x27_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/27x27_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode full --meta-loops 100 --model-dir "./models/27x27_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/27x27_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[27*27]" --ablation-mode output --meta-loops 100 --model-dir "./models/27x27_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [26*26]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[26*26]" --ablation-mode none --meta-loops 100 --model-dir "./models/26x26_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[26*26]" --ablation-mode none --meta-loops 100 --model-dir "./models/26x26_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[26*26]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/26x26_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[26*26]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/26x26_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[26*26]" --ablation-mode full --meta-loops 100 --model-dir "./models/26x26_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[26*26]" --ablation-mode full --meta-loops 100 --model-dir "./models/26x26_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[26*26]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/26x26_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[26*26]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/26x26_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[26*26]" --ablation-mode output --meta-loops 100 --model-dir "./models/26x26_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[26*26]" --ablation-mode output --meta-loops 100 --model-dir "./models/26x26_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [25*25]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode none --meta-loops 100 --model-dir "./models/25x25_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/25x25_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/25x25_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode full --meta-loops 100 --model-dir "./models/25x25_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/25x25_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[25*25]" --ablation-mode output --meta-loops 100 --model-dir "./models/25x25_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [24*24]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode none --meta-loops 100 --model-dir "./models/24x24_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/24x24_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/24x24_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode full --meta-loops 100 --model-dir "./models/24x24_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/24x24_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[24*24]" --ablation-mode output --meta-loops 100 --model-dir "./models/24x24_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [23*23]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode none --meta-loops 100 --model-dir "./models/23x23_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/23x23_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/23x23_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode full --meta-loops 100 --model-dir "./models/23x23_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/23x23_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[23*23]" --ablation-mode output --meta-loops 100 --model-dir "./models/23x23_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [22*22]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode none --meta-loops 100 --model-dir "./models/22x22_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/22x22_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/22x22_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode full --meta-loops 100 --model-dir "./models/22x22_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/22x22_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[22*22]" --ablation-mode output --meta-loops 100 --model-dir "./models/22x22_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [21*21]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode none --meta-loops 100 --model-dir "./models/21x21_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/21x21_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/21x21_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode full --meta-loops 100 --model-dir "./models/21x21_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/21x21_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[21*21]" --ablation-mode output --meta-loops 100 --model-dir "./models/21x21_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [20*20]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode none --meta-loops 100 --model-dir "./models/20x20_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/20x20_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/20x20_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode full --meta-loops 100 --model-dir "./models/20x20_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/20x20_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[20*20]" --ablation-mode output --meta-loops 100 --model-dir "./models/20x20_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [19*19]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode none --meta-loops 100 --model-dir "./models/19x19_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/19x19_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/19x19_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode full --meta-loops 100 --model-dir "./models/19x19_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/19x19_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[19*19]" --ablation-mode output --meta-loops 100 --model-dir "./models/19x19_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [18*18]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[18*18]" --ablation-mode none --meta-loops 100 --model-dir "./models/18x18_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[18*18]" --ablation-mode none --meta-loops 100 --model-dir "./models/18x18_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[18*18]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/18x18_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[18*18]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/18x18_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[18*18]" --ablation-mode full --meta-loops 100 --model-dir "./models/18x18_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[18*18]" --ablation-mode full --meta-loops 100 --model-dir "./models/18x18_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[18*18]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/18x18_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[18*18]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/18x18_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[18*18]" --ablation-mode output --meta-loops 100 --model-dir "./models/18x18_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[18*18]" --ablation-mode output --meta-loops 100 --model-dir "./models/18x18_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [17*17]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode none --meta-loops 100 --model-dir "./models/17x17_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/17x17_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/17x17_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode full --meta-loops 100 --model-dir "./models/17x17_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/17x17_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[17*17]" --ablation-mode output --meta-loops 100 --model-dir "./models/17x17_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [16*16]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode none --meta-loops 100 --model-dir "./models/16x16_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/16x16_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/16x16_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode full --meta-loops 100 --model-dir "./models/16x16_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/16x16_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[16*16]" --ablation-mode output --meta-loops 100 --model-dir "./models/16x16_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [15*15]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode none --meta-loops 100 --model-dir "./models/15x15_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/15x15_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/15x15_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode full --meta-loops 100 --model-dir "./models/15x15_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/15x15_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[15*15]" --ablation-mode output --meta-loops 100 --model-dir "./models/15x15_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [14*14]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode none --meta-loops 100 --model-dir "./models/14x14_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/14x14_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/14x14_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode full --meta-loops 100 --model-dir "./models/14x14_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/14x14_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[14*14]" --ablation-mode output --meta-loops 100 --model-dir "./models/14x14_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [13*13]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode none --meta-loops 100 --model-dir "./models/13x13_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/13x13_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/13x13_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode full --meta-loops 100 --model-dir "./models/13x13_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/13x13_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[13*13]" --ablation-mode output --meta-loops 100 --model-dir "./models/13x13_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [12*12]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[12*12]" --ablation-mode none --meta-loops 100 --model-dir "./models/12x12_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[12*12]" --ablation-mode none --meta-loops 100 --model-dir "./models/12x12_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[12*12]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/12x12_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[12*12]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/12x12_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[12*12]" --ablation-mode full --meta-loops 100 --model-dir "./models/12x12_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[12*12]" --ablation-mode full --meta-loops 100 --model-dir "./models/12x12_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[12*12]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/12x12_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[12*12]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/12x12_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[12*12]" --ablation-mode output --meta-loops 100 --model-dir "./models/12x12_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[12*12]" --ablation-mode output --meta-loops 100 --model-dir "./models/12x12_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [11*11]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode none --meta-loops 100 --model-dir "./models/11x11_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/11x11_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/11x11_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode full --meta-loops 100 --model-dir "./models/11x11_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/11x11_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[11*11]" --ablation-mode output --meta-loops 100 --model-dir "./models/11x11_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [10*10]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode none --meta-loops 100 --model-dir "./models/10x10_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/10x10_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/10x10_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode full --meta-loops 100 --model-dir "./models/10x10_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/10x10_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[10*10]" --ablation-mode output --meta-loops 100 --model-dir "./models/10x10_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [9*9]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode none --meta-loops 100 --model-dir "./models/9x9_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/9x9_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/9x9_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode full --meta-loops 100 --model-dir "./models/9x9_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/9x9_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[9*9]" --ablation-mode output --meta-loops 100 --model-dir "./models/9x9_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [8*8]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[8*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x8_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*8]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x8_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[8*8]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/8x8_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[8*8]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/8x8_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[8*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x8_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*8]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x8_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[8*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x8_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*8]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x8_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[8*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x8_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*8]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x8_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [7*7]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[7*7]" --ablation-mode none --meta-loops 100 --model-dir "./models/7x7_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[7*7]" --ablation-mode none --meta-loops 100 --model-dir "./models/7x7_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[7*7]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/7x7_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[7*7]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/7x7_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[7*7]" --ablation-mode full --meta-loops 100 --model-dir "./models/7x7_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[7*7]" --ablation-mode full --meta-loops 100 --model-dir "./models/7x7_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[7*7]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/7x7_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[7*7]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/7x7_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[7*7]" --ablation-mode output --meta-loops 100 --model-dir "./models/7x7_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[7*7]" --ablation-mode output --meta-loops 100 --model-dir "./models/7x7_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [6*6]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[6*6]" --ablation-mode none --meta-loops 100 --model-dir "./models/6x6_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[6*6]" --ablation-mode none --meta-loops 100 --model-dir "./models/6x6_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[6*6]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/6x6_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[6*6]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/6x6_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[6*6]" --ablation-mode full --meta-loops 100 --model-dir "./models/6x6_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[6*6]" --ablation-mode full --meta-loops 100 --model-dir "./models/6x6_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[6*6]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/6x6_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[6*6]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/6x6_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[6*6]" --ablation-mode output --meta-loops 100 --model-dir "./models/6x6_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[6*6]" --ablation-mode output --meta-loops 100 --model-dir "./models/6x6_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [5*5]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[5*5]" --ablation-mode none --meta-loops 100 --model-dir "./models/5x5_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[5*5]" --ablation-mode none --meta-loops 100 --model-dir "./models/5x5_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[5*5]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/5x5_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[5*5]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/5x5_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[5*5]" --ablation-mode full --meta-loops 100 --model-dir "./models/5x5_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[5*5]" --ablation-mode full --meta-loops 100 --model-dir "./models/5x5_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[5*5]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/5x5_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[5*5]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/5x5_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[5*5]" --ablation-mode output --meta-loops 100 --model-dir "./models/5x5_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[5*5]" --ablation-mode output --meta-loops 100 --model-dir "./models/5x5_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [4*4]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[4*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x4_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x4_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[4*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x4_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x4_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[4*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x4_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x4_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[4*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x4_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x4_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [3*3]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[3*3]" --ablation-mode none --meta-loops 100 --model-dir "./models/3x3_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[3*3]" --ablation-mode none --meta-loops 100 --model-dir "./models/3x3_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[3*3]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/3x3_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[3*3]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/3x3_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[3*3]" --ablation-mode full --meta-loops 100 --model-dir "./models/3x3_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[3*3]" --ablation-mode full --meta-loops 100 --model-dir "./models/3x3_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[3*3]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/3x3_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[3*3]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/3x3_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[3*3]" --ablation-mode output --meta-loops 100 --model-dir "./models/3x3_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[3*3]" --ablation-mode output --meta-loops 100 --model-dir "./models/3x3_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/1x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/1x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/1x1_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [632*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/632x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/632x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/632x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/632x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/632x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[632*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/632x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [425*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/425x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/425x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/425x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/425x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/425x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[425*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/425x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [280*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/280x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/280x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/280x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/280x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/280x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[280*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/280x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [185*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/185x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/185x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/185x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/185x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/185x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[185*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/185x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [119*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/119x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/119x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/119x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/119x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/119x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[119*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/119x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [76*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/76x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/76x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/76x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/76x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/76x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[76*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/76x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [47*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/47x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/47x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/47x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/47x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/47x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[47*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/47x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [29*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/29x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/29x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/29x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/29x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/29x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[29*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/29x4_output/" --debugecho '  Completed'
+
+echo 'Architecture completed'
+
+echo 'Testing architecture: [17*4]'
+echo '  Running none ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode none --meta-loops 100 --model-dir "./models/17x4_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/17x4_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/17x4_dropout/" --debugecho '  Completed'
+
+echo '  Running full ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode full --meta-loops 100 --model-dir "./models/17x4_full/" --debugecho '  Completed'
+
+echo '  Running hidden ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/17x4_hidden/" --debugecho '  Completed'
+
+echo '  Running output ablation mode...'
+poetry run train -- --arch "[17*4]" --ablation-mode output --meta-loops 100 --model-dir "./models/17x4_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [939*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[939*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/939x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[939*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/939x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[939*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/939x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[939*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/939x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[939*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/939x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[939*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/939x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[939*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/939x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[939*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/939x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[939*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/939x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[939*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/939x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [588*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[588*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/588x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[588*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/588x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[588*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/588x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[588*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/588x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[588*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/588x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[588*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/588x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[588*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/588x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[588*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/588x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[588*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/588x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[588*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/588x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [354*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[354*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/354x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[354*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/354x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[354*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/354x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[354*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/354x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[354*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/354x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[354*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/354x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[354*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/354x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[354*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/354x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[354*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/354x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[354*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/354x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [214*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[214*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/214x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[214*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/214x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[214*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/214x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[214*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/214x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[214*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/214x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[214*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/214x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[214*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/214x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[214*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/214x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[214*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/214x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[214*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/214x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [115*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[115*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/115x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/115x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[115*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/115x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[115*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/115x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[115*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/115x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/115x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[115*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/115x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/115x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[115*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/115x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[115*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/115x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [59*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[59*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/59x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[59*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/59x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[59*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/59x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[59*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/59x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[59*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/59x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[59*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/59x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[59*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/59x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[59*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/59x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[59*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/59x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[59*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/59x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [30*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[30*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/30x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[30*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/30x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[30*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/30x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[30*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/30x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[30*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/30x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[30*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/30x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[30*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/30x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[30*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/30x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[30*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/30x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[30*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/30x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [16*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[16*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/16x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/16x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[16*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/16x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[16*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/16x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[16*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/16x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/16x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[16*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/16x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/16x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[16*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/16x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/16x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [8*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[8*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[8*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/8x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[8*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/8x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[8*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[8*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[8*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [4*2]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[4*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x2_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*2]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x2_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*2]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x2_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*2]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x2_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[4*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x2_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*2]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x2_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[4*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x2_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*2]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x2_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[4*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x2_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*2]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x2_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2048*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2048*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/2048x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2048*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/2048x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2048*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2048x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2048*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2048x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2048*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/2048x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2048*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/2048x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2048*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2048x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2048*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2048x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2048*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/2048x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2048*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/2048x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [1024*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[1024*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/1024x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1024*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/1024x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[1024*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/1024x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[1024*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/1024x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[1024*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/1024x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1024*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/1024x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[1024*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1024x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1024*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/1024x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[1024*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/1024x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[1024*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/1024x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [512*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[512*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/512x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[512*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/512x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[512*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/512x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[512*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/512x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[512*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/512x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[512*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/512x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[512*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/512x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[512*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/512x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[512*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/512x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[512*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/512x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [256*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[256*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/256x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[256*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/256x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[256*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/256x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[256*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/256x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[256*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/256x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[256*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/256x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[256*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/256x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[256*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/256x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[256*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/256x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[256*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/256x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [128*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[128*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/128x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[128*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/128x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[128*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/128x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[128*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/128x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[128*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/128x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[128*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/128x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[128*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/128x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[128*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/128x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[128*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/128x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[128*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/128x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [64*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[64*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/64x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[64*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/64x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[64*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/64x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[64*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/64x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[64*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/64x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[64*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/64x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[64*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/64x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[64*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/64x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[64*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/64x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[64*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/64x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [32*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[32*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/32x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[32*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/32x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[32*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/32x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[32*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/32x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[32*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/32x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[32*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/32x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[32*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/32x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[32*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/32x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[32*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/32x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[32*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/32x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [16*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[16*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/16x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/16x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[16*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/16x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[16*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/16x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[16*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/16x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/16x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[16*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/16x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/16x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[16*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/16x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[16*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/16x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [8*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[8*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/8x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[8*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/8x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[8*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/8x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[8*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/8x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[8*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/8x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[8*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[8*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/8x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [4*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[4*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/4x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[4*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/4x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[4*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/4x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[4*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/4x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[4*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/4x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[4*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[4*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/4x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 
 echo 'Testing architecture: [2*1]'
 echo '  Running none ablation mode...'
-poetry run train -- --arch "[2*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x1_none/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*1]" --ablation-mode none --meta-loops 100 --model-dir "./models/2x1_none/" --debugecho '  Completed'
+
+echo '  Running decay ablation mode...'
+poetry run train -- --arch "[2*1]" --ablation-mode decay --weight-decay 1e-4 --meta-loops 100 --model-dir "./models/2x1_decay/" --debugecho '  Completed'
+
+echo '  Running dropout ablation mode...'
+poetry run train -- --arch "[2*1]" --ablation-mode dropout --dropout 0.1 --meta-loops 100 --model-dir "./models/2x1_dropout/" --debugecho '  Completed'
 
 echo '  Running full ablation mode...'
-poetry run train -- --arch "[2*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x1_full/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*1]" --ablation-mode full --meta-loops 100 --model-dir "./models/2x1_full/" --debugecho '  Completed'
 
 echo '  Running hidden ablation mode...'
-poetry run train -- --arch "[2*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x1_hidden/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*1]" --ablation-mode hidden --meta-loops 100 --model-dir "./models/2x1_hidden/" --debugecho '  Completed'
 
 echo '  Running output ablation mode...'
-poetry run train -- --arch "[2*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x1_output/" --debug
-echo '  Completed'
+poetry run train -- --arch "[2*1]" --ablation-mode output --meta-loops 100 --model-dir "./models/2x1_output/" --debugecho '  Completed'
 
 echo 'Architecture completed'
 

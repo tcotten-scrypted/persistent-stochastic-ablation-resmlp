@@ -112,6 +112,7 @@ For large-scale experimentation, we used AWS SageMaker to automate the running o
 - `runner.py` - Main orchestration script for launching SageMaker training jobs
 - `train.py` - Training script adapted for SageMaker environment
 - `current_batch_configurations.txt` - Configuration list (copy from `reproduction/configurations.txt`)
+- `requested-jobs.txt` - Generated file containing job IDs for CloudWatch log access
 
 **Usage:**
 1. Copy desired configurations from `reproduction/configurations.txt` to `aws/sagemaker/current_batch_configurations.txt`
@@ -124,6 +125,7 @@ For large-scale experimentation, we used AWS SageMaker to automate the running o
 - **Customization Required**: Configure S3 bucket, instance type, and spot instances in `.env`
 - **Cost Considerations**: Set `USE_SPOT_INSTANCES=true` for cost efficiency
 - **Results Parsing**: Use `poetry run sagemaker-results-parser` to analyze results
+- **Job Tracking**: Job IDs are saved to `aws/sagemaker/requested-jobs.txt` for easy CloudWatch log access
 
 **Advantages:**
 - **Automated Scaling**: Run multiple trials in parallel

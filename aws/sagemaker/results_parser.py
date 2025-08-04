@@ -46,7 +46,7 @@ def count_parameters(input_size, hidden_layers, output_size):
 def get_job_results(s3_client, arch, mode):
     """
     Finds the latest job for an arch/mode and returns its results.
-    Returns a dictionary with both stats and raw scores, or an error string.
+    Returns a dictionary with comprehensive stats and raw data, or an error string.
     """
     arch_safe_name = arch.replace('*', 'x')
     job_prefix = f"{S3_PREFIX}/psa-{arch_safe_name}-{mode}"
@@ -70,6 +70,61 @@ def get_job_results(s3_client, arch, mode):
             s3_client.download_fileobj(S3_BUCKET_NAME, s3_key_results, f)
 
         with tarfile.open("model.tar.gz", "r:gz") as tar:
+            # Try to get comprehensive results first
+            comprehensive_file_member = next((m for m in tar.getmembers() if os.path.basename(m.name) == "comprehensive_results.json"), None)
+            
+            if comprehensive_file_member:
+                import json
+                content = tar.extractfile(comprehensive_file_member).read().decode('utf-8')
+                comprehensive_results = json.loads(content)
+                
+                if not comprehensive_results: return "EMPTY_RESULTS"
+                
+                # Extract the 4 major areas of data
+                best_validation_accuracies = [r['best_validation_accuracy'] for r in comprehensive_results]
+                best_validation_epochs = [r['best_validation_epoch'] for r in comprehensive_results]
+                final_test_accuracies = [r['final_test_accuracy'] for r in comprehensive_results]
+                bounties = [r['bounty'] for r in comprehensive_results]
+                
+                # Calculate comprehensive stats
+                stats = {
+                    "best_validation_accuracy": {
+                        "mean": np.mean(best_validation_accuracies), 
+                        "std": np.std(best_validation_accuracies),
+                        "min": np.min(best_validation_accuracies), 
+                        "max": np.max(best_validation_accuracies), 
+                        "count": len(best_validation_accuracies)
+                    },
+                    "best_validation_epoch": {
+                        "mean": np.mean(best_validation_epochs), 
+                        "std": np.std(best_validation_epochs),
+                        "min": np.min(best_validation_epochs), 
+                        "max": np.max(best_validation_epochs), 
+                        "count": len(best_validation_epochs)
+                    },
+                    "final_test_accuracy": {
+                        "mean": np.mean(final_test_accuracies), 
+                        "std": np.std(final_test_accuracies),
+                        "min": np.min(final_test_accuracies), 
+                        "max": np.max(final_test_accuracies), 
+                        "count": len(final_test_accuracies)
+                    },
+                    "bounty": {
+                        "mean": np.mean(bounties), 
+                        "std": np.std(bounties),
+                        "min": np.min(bounties), 
+                        "max": np.max(bounties), 
+                        "count": len(bounties)
+                    }
+                }
+                
+                return {
+                    "stats": stats, 
+                    "comprehensive_data": comprehensive_results,
+                    "legacy_scores": bounties  # For backward compatibility
+                }
+            
+            # Fallback to legacy results.txt format
             results_file_member = next((m for m in tar.getmembers() if os.path.basename(m.name) == "results.txt"), None)
             
             if results_file_member:
@@ -78,12 +133,14 @@ def get_job_results(s3_client, arch, mode):
                 
                 if not scores: return "EMPTY_RESULTS"
                 
-                # Return both the calculated stats and the raw scores list
+                # Return legacy format stats
                 stats = {
-                    "mean": np.mean(scores), "std": np.std(scores),
-                    "min": np.min(scores), "max": np.max(scores), "count": len(scores)
+                    "bounty": {
+                        "mean": np.mean(scores), "std": np.std(scores),
+                        "min": np.min(scores), "max": np.max(scores), "count": len(scores)
+                    }
                 }
-                return {"stats": stats, "scores": scores}
+                return {"stats": stats, "legacy_scores": scores}
             else:
                 return "RESULTS_NOT_FOUND"
 
@@ -114,15 +171,8 @@ def main():
     with open(CONFIG_FILE, 'r') as f:
         configs = [line.strip() for line in f if line.strip()]
         
-    # Dynamically determine ablation modes from S3 or configs
-    ablation_modes = set()
-    for config in configs:
-        # Try to find all modes for this config in S3
-        for mode in ["none", "decay", "dropout", "full", "hidden", "output"]:
-            result = get_job_results(s3_client, config, mode)
-            if not (isinstance(result, str) and result.startswith("NO_JOB_FOUND")):
-                ablation_modes.add(mode)
-    ablation_modes = sorted(list(ablation_modes), key=lambda x: ["none", "decay", "dropout", "full", "hidden", "output"].index(x) if x in ["none", "decay", "dropout", "full", "hidden", "output"] else 99)
+    # Use all 6 ablation modes - we'll handle missing results gracefully
+    ablation_modes = ["none", "decay", "dropout", "full", "hidden", "output"]
 
     all_results = {}
 
@@ -142,6 +192,8 @@ def main():
 
     CONSOLE.print(f"\n✅ Collection complete. Writing results to [bold green]{SUMMARY_FILE}[/bold green] and [bold green]{TRIALS_FILE}[/bold green]")
     
+
+    
     # --- PART 1: WRITE THE SUMMARY FILE ---
     with open(SUMMARY_FILE, 'w') as f:
         f.write("# Persistent Stochastic Ablation - SimpleMLP Results Summary\n\n")
@@ -153,9 +205,11 @@ def main():
             
             for mode, result in modes.items():
                 mode_name = mode.capitalize()
-                if isinstance(result, dict):
-                    stats = result['stats']
+                if isinstance(result, dict) and 'stats' in result and 'bounty' in result['stats']:
+                    stats = result['stats']['bounty']
                     f.write(f"* {mode_name}: Mean={stats['mean']:.2f}% | Std={stats['std']:.2f}% | Min={stats['min']:.2f}% | Max={stats['max']:.2f}% (n={stats['count']})\n")
+                elif isinstance(result, dict):
+                    f.write(f"* {mode_name}: {result}\n")
                 else:
                     f.write(f"* {mode_name}: {result}\n")
             f.write("\n")
@@ -170,8 +224,8 @@ def main():
             # Determine the maximum number of trials for this architecture to set table rows
             max_trials = 0
             for result in modes.values():
-                if isinstance(result, dict):
-                    max_trials = max(max_trials, result['stats']['count'])
+                if isinstance(result, dict) and 'stats' in result and 'bounty' in result['stats']:
+                    max_trials = max(max_trials, result['stats']['bounty']['count'])
             
             if max_trials == 0:
                 f.write("No successful trials found for this architecture.\n\n")
@@ -186,8 +240,8 @@ def main():
                 row = [f"| {i+1} "]
                 for mode in ablation_modes:
                     result = modes.get(mode, None)
-                    if isinstance(result, dict) and i < len(result['scores']):
-                        score = f"{result['scores'][i]:.2f}%"
+                    if isinstance(result, dict) and 'legacy_scores' in result and i < len(result['legacy_scores']):
+                        score = f"{result['legacy_scores'][i]:.2f}%"
                         row.append(f"| {score} ")
                     else:
                         row.append("| N/A ")

@@ -100,6 +100,7 @@ def main(args):
 
     jobs_launched = 0
     jobs_skipped = 0
+    job_ids = []  # Track job IDs for logging
 
     for arch in architectures:
         for mode in ablation_modes:
@@ -150,7 +151,9 @@ def main(args):
 
             try:
                 pytorch_estimator.fit(wait=False)
-                print(f"🚀 LAUNCHED: {pytorch_estimator.latest_training_job.name}")
+                job_name = pytorch_estimator.latest_training_job.name
+                print(f"🚀 LAUNCHED: {job_name}")
+                job_ids.append(job_name)
                 jobs_launched += 1
             except botocore.exceptions.ClientError as e:
                 if e.response['Error']['Code'] == 'ResourceLimitExceeded':
@@ -161,11 +164,20 @@ def main(args):
             
             time.sleep(1)
 
+    # Save job IDs to file for easy CloudWatch log access
+    if job_ids:
+        jobs_file = script_dir / "requested-jobs.txt"
+        with open(jobs_file, 'w') as f:
+            for job_id in job_ids:
+                f.write(f"{job_id}\n")
+        print(f"📝 Job IDs saved to: {jobs_file}")
+    
     print(f"\n✅ Batch execution summary:")
     print(f"   Jobs launched: {jobs_launched}")
     print(f"   Jobs skipped: {jobs_skipped}")
     print(f"   Total configurations: {len(architectures) * len(ablation_modes)}")
     print("\n   Monitor progress in the AWS SageMaker console.")
+    print(f"   Job IDs saved to: requested-jobs.txt for CloudWatch log access")
 
 
 if __name__ == "__main__":
@@ -179,7 +191,7 @@ if __name__ == "__main__":
         "--ablation-modes",
         type=str,
         nargs='+',
-        default=["none", "full", "hidden", "output"],
+        default=["none", "decay", "dropout", "full", "hidden", "output"],
         help="List of ablation modes to run (e.g. decay dropout)."
     )
     parser.add_argument(
