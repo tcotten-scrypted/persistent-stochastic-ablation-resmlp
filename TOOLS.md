@@ -80,14 +80,14 @@ python scripts/make_table_trial_accuracy.py --datafile results/my_results.md --o
 - **Winner**: The ablation mode(s) with highest accuracy (handles ties)
 
 **Input**: 
-- Reads from `results/psa_simplemlp_summary.md` (default)
+- Reads from `results/psa_resmlp_summary.md` (default)
 - Uses `reproduction/configurations.txt` for row ordering
 
 **Example Output**:
 ```latex
 \begin{table}[ht]
 \centering
-\caption{Mean Peak Accuracy (\%) with Standard Deviation over 10 Trials for SimpleMLP Architectures}
+\caption{Mean Peak Accuracy (\%) with Standard Deviation over 10 Trials for ResMLP Architectures}
 \label{tab:results_summary_stats}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l l l l l l}
@@ -117,7 +117,7 @@ python scripts/make_table_trial_accuracy.py --datafile results/my_results.md --o
 
 ### `make_figure_design_space.py`
 
-Generate design space visualization for SimpleMLP architectures.
+Generate design space visualization for ResMLP architectures.
 
 **Purpose**: Creates a logarithmic scatter plot showing the design space of all tested architectures, visualizing the relationship between network depth and width.
 
@@ -154,9 +154,9 @@ python scripts/make_figure_design_space.py --config-file reproduction/my_configs
 
 ### `make_figure_heatmaps.py`
 
-Generate comprehensive heat map visualizations for SimpleMLP design space.
+Generate comprehensive heat map visualizations for ResMLP design space.
 
-**Purpose**: Creates a suite of four data-driven heat map visualizations that tell a comprehensive story about the SimpleMLP design space under Persistent Stochastic Ablation (PSA).
+**Purpose**: Creates a suite of four data-driven heat map visualizations that tell a comprehensive story about the ResMLP design space under Persistent Stochastic Ablation (PSA).
 
 **Usage**:
 ```bash
@@ -178,7 +178,7 @@ python scripts/make_figure_heatmaps.py --config-file reproduction/my_configs.txt
 
 **Input**: 
 - Reads from `reproduction/configurations.txt` (default)
-- Reads from `results/psa_simplemlp_trials.md` (default)
+- Reads from `results/psa_resmlp_trials.md` (default)
 - Outputs to `results/` directory (default)
 
 **Features**:

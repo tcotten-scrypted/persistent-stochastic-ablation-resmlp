@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate design space visualization for SimpleMLP architectures.
+Generate design space visualization for ResMLP architectures.
 
 This script reads configurations from reproduction/configurations.txt and generates
 a logarithmic scatter plot showing the design space of all tested architectures.
@@ -57,7 +57,7 @@ def generate_design_space_plot(architectures, output_file):
     # Axis labels and title
     ax.set_xlabel('Depth (# of layers)', fontsize=14)
     ax.set_ylabel('Width (neurons per layer)', fontsize=14)
-    ax.set_title('SimpleMLP Design Space (Logarithmic Scale)', fontsize=16)
+    ax.set_title('ResMLP Design Space (Logarithmic Scale)', fontsize=16)
     
     # Grid lines for easier reading
     ax.grid(True, which="both", linestyle='--', alpha=0.5)
@@ -90,10 +90,10 @@ def generate_design_space_plot(architectures, output_file):
 
 def main():
     """Main function to generate the design space visualization."""
-    parser = argparse.ArgumentParser(description="Generate design space visualization for SimpleMLP architectures.")
+    parser = argparse.ArgumentParser(description="Generate design space visualization for ResMLP architectures.")
     parser.add_argument('--config-file', type=str, default='reproduction/configurations.txt',
                        help="Path to configurations file")
-    parser.add_argument('--output-file', type=str, default='results/SimpleMLP_Testing_Design_Space.png',
+    parser.add_argument('--output-file', type=str, default='results/ResMLP_Testing_Design_Space.png',
                        help="Path for output PNG file")
     args = parser.parse_args()
     

@@ -28,9 +28,9 @@ This study investigates whether **Persistent Stochastic Ablation (PSA)** can act
 
 ## Methodology
 
-### SimpleMLP Architecture
-The study uses a flexible Multi-Layer Perceptron (MLP) architecture with:
-- Fully-connected linear layers with ReLU activations
+### ResMLP Architecture
+The study uses a flexible Residual Multi-Layer Perceptron (ResMLP) architecture with:
+- Residual blocks with skip connections to solve vanishing gradient problems
 - Dynamic architecture specification via `--arch` parameter
 - Input: 784 dimensions (MNIST flattened)
 - Output: 10 dimensions (MNIST digits 0-9)
@@ -52,7 +52,7 @@ Each architecture was tested with all six ablation modes over 10 independent tri
 
 1. **Beneficial Regularization**: Large, over-parameterized models where ablation improves performance
 2. **Detrimental Damage**: Well-sized models where ablation harms performance
-3. **Architectural Failure**: Deep models that fail to train due to vanishing gradients
+3. **Deep Network Performance**: Deep models that can now train effectively with residual connections
 4. **Chaotic Optimization**: Small/pathological models where ablation acts as random search
 
 ## Reproduction Steps
@@ -157,9 +157,9 @@ For large-scale experimentation, we used AWS SageMaker to automate the running o
 - Medium models (e.g., `1*512`, `2*115`) should show ablation harms
 - `none` mode should consistently win
 
-**Regime 3 - Architectural Failure:**
-- Deep models (e.g., `115*115`, `91*91`) should fail to train
-- All modes should achieve ~11.35% accuracy (random chance)
+**Regime 3 - Deep Network Performance:**
+- Deep models (e.g., `115*115`, `91*91`) should now train effectively with residual connections
+- Performance should vary based on ablation mode effectiveness
 
 **Regime 4 - Chaotic Optimization:**
 - Small models (e.g., `8*8`, `2*1`) should show unpredictable results
@@ -208,7 +208,7 @@ The reproduction should confirm:
 ### Key Findings to Replicate
 1. **Regime Boundaries**: Verify the transition points between regimes
 2. **Ablation Mode Effectiveness**: Confirm relative performance of `none`, `full`, `hidden`, `output`
-3. **Vanishing Gradient Problem**: Validate the hard boundary at ~20 layers
+3. **Residual Connection Benefits**: Validate that deep architectures now train effectively
 4. **Parameter Matching**: Verify that matched-parameter architectures show similar trends
 
 ### Success Criteria
@@ -220,10 +220,10 @@ The reproduction should confirm:
 ## Future Work
 
 This reproduction establishes the foundation for:
-1. **ResNet-based experiments** to overcome vanishing gradient limitations
-2. **Multi-dataset validation** beyond MNIST
-3. **Advanced ablation strategies** (percentage-based, targeted ablation)
-4. **Patience mechanisms** in the Frustration Engine
+1. **Multi-dataset validation** beyond MNIST
+2. **Advanced ablation strategies** (percentage-based, targeted ablation)
+3. **Patience mechanisms** in the Frustration Engine
+4. **Architecture scaling** to even deeper networks
 
 ## References
 

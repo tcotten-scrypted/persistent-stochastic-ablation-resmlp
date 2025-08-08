@@ -2,7 +2,7 @@
 """
 Generate LaTeX table from trial accuracy results data with statistical information.
 
-This script reads results from results/psa_simplemlp_summary.md and generates
+This script reads results from results/psa_resmlp_summary.md and generates
 a LaTeX table showing mean accuracy with standard deviation for each architecture
 and ablation mode. It dynamically detects the number of trials from the results.
 
@@ -107,12 +107,12 @@ def generate_latex_table(results, order, caption, label):
 def main():
     """Generate LaTeX table from results data."""
     parser = argparse.ArgumentParser(description="Generate LaTeX table from statistical results data.")
-    parser.add_argument('--datafile', type=str, default='results/psa_simplemlp_summary.md',
+    parser.add_argument('--datafile', type=str, default='results/psa_resmlp_summary.md',
                        help="Path to results summary file (Markdown)")
     parser.add_argument('--order', type=str, default='reproduction/configurations.txt',
                        help="Path to file with desired architecture order.")
     parser.add_argument('--caption', type=str, 
-                       default="Mean Peak Accuracy (\\%) with Standard Deviation over 10 Trials for SimpleMLP Architectures", 
+                       default="Mean Peak Accuracy (\\%) with Standard Deviation over 10 Trials for ResMLP Architectures", 
                        help="Table caption.")
     parser.add_argument('--label', type=str, default="results_summary_stats", 
                        help="LaTeX label for the table.")

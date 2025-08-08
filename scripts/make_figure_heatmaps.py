@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates a suite of data-driven heat map visualizations for the SimpleMLP
+Generates a suite of data-driven heat map visualizations for the ResMLP
 design space, based on the results of Persistent Stochastic Ablation (PSA) trials.
 
 This script produces five distinct plots to tell a comprehensive story:
@@ -455,7 +455,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate a suite of heat map visualizations for SimpleMLP PSA results.")
     parser.add_argument('--config-file', type=Path, default=Path('reproduction/configurations.txt'),
                         help="Path to the architecture configurations file.")
-    parser.add_argument('--trials-file', type=Path, default=Path('results/psa_simplemlp_trials.md'),
+    parser.add_argument('--trials-file', type=Path, default=Path('results/psa_resmlp_trials.md'),
                         help="Path to the markdown file with raw trial data.")
     parser.add_argument('--output-dir', type=Path, default=Path('results/'),
                         help="Directory to save the output PNG files.")
@@ -480,11 +480,11 @@ def main():
     print("--- Generating Plots ---")
 
     # --- Generate and Save Plots ---
-    plot_baseline_performance(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Baseline_Performance.png')
-    plot_ablation_effects(architectures, metrics, trial_results, args.output_dir / 'SimpleMLP_Heatmap_Ablation_Effects.png')
-    plot_instability(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Instability.png')
-    plot_winning_strategy(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Winning_Strategy.png')
-    plot_parameter_matching(architectures, args.output_dir / 'SimpleMLP_Heatmap_Parameter_Matching.png')
+    plot_baseline_performance(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Baseline_Performance.png')
+    plot_ablation_effects(architectures, metrics, trial_results, args.output_dir / 'ResMLP_Heatmap_Ablation_Effects.png')
+    plot_instability(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Instability.png')
+    plot_winning_strategy(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Winning_Strategy.png')
+    plot_parameter_matching(architectures, args.output_dir / 'ResMLP_Heatmap_Parameter_Matching.png')
 
     print("--- Visualization Generation Complete ---")
 

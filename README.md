@@ -1,4 +1,4 @@
-# Persistent Stochastic Ablation (PSA) - SimpleMLP
+# Persistent Stochastic Ablation (PSA) - ResMLP
 
 Source code for the mini-paper "Beyond Pruning and Dropout: Evolving Robust Networks via Persistent Stochastic Ablation"
 
@@ -42,9 +42,12 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ## Project Structure
 
+### ResMLP Architecture
+The study uses a **Residual Multi-Layer Perceptron (ResMLP)** architecture with skip connections to solve the vanishing gradient problem that limited the original SimpleMLP experiments. This allows testing of much deeper architectures that were previously untrainable.
+
 ```
 ├── src/                    # Source code
-│   └── train_psa_simplemlp.py
+│   └── train_psa_resmlp.py
 ├── scripts/                # Utility and execution scripts
 │   ├── clean.py
 │   ├── clean_all.py
@@ -230,8 +233,8 @@ poetry run sagemaker-results-parser
 - `.env` file with AWS configuration in `aws/sagemaker/` (copy from `.env.example`)
 
 **Output Files:**
-- `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
-- `results/psa_simplemlp_trials.md` - Raw trial data in markdown tables
+- `results/psa_resmlp_summary.md` - Statistical summary of all experiments
+- `results/psa_resmlp_trials.md` - Raw trial data in markdown tables
 
 ## Documentation
 

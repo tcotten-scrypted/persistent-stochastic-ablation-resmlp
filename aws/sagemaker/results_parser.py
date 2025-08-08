@@ -17,8 +17,8 @@ AWS_REGION = os.getenv("AWS_REGION")
 S3_BUCKET_NAME = "scrypted-ai-training"
 S3_PREFIX = "psa-experiment"
 CONFIG_FILE = "reproduction/configurations.txt"
-SUMMARY_FILE = "results/psa_simplemlp_summary.md"
-TRIALS_FILE = "results/psa_simplemlp_trials.md"
+SUMMARY_FILE = "results/psa_resmlp_summary.md"
+TRIALS_FILE = "results/psa_resmlp_trials.md"
 CONSOLE = Console()
 
 NUM_INPUTS = 784

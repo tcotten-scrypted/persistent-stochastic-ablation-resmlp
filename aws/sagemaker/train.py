@@ -1,15 +1,17 @@
-# train.py - SageMaker Version
+# train.py - SageMaker Version (ResMLP)
 #
 # Author: Tim Cotten @cottenio <tcotten@scrypted.ai, tcotten2@gmu.edu> 
 #
 # Description:
-# A comprehensive training harness for testing architectural variations and four
-# distinct live ablation strategies on the MNIST dataset.
+# A comprehensive training harness for testing architectural variations and six
+# distinct live ablation strategies on the MNIST dataset using ResMLP architecture.
 # Adapted for AWS SageMaker execution with environment-specific modifications.
 #
 # Core Concepts:
 # 1. Six Ablation Modes:
 #    - 'none': Control group.
+#    - 'decay': Traditional weight decay regularization
+#    - 'dropout': Traditional dropout regularization
 #    - 'full': Partially ablates a neuron in ANY linear layer (hidden or output).
 #    - 'hidden': Fully ablates a neuron in a HIDDEN layer only.
 #    - 'output': Partially ablates a neuron in the OUTPUT layer only.
@@ -30,10 +32,12 @@
 #
 # 4. Dynamic Architecture: Use --arch "[4*4, 2*8]" to define complex models.
 # 5. Frustration Engine: The training orchestration driving the experiments.
+# 6. ResMLP Architecture: Residual connections to solve vanishing gradient problems.
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 from torchvision import datasets, transforms
 
@@ -198,27 +202,77 @@ def setup_logging(is_debug: bool, console: Console) -> logging.Logger:
 
 # --- 2. Core Model and Ablator ---
 
-class SimpleMLP(nn.Module):
-    """MLP built from a list of hidden layer sizes."""
+class ResidualBlock(nn.Module):
+    """A single residual block: Linear -> ReLU -> Linear, with a skip connection."""
+    def __init__(self, width: int, dropout_rate: float = 0.1):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(width, width),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(width, width)
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return F.relu(x + self.layers(x))
+
+class ResNetStack(nn.Module):
+    """A stack of multiple ResidualBlocks of the same width."""
+    def __init__(self, depth: int, width: int, dropout_rate: float = 0.1):
+        super().__init__()
+        self.blocks = nn.Sequential(*[ResidualBlock(width, dropout_rate) for _ in range(depth)])
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.blocks(x)
+
+class ResMLP(nn.Module):
+    """A flexible ResNet-based MLP built from heterogeneous stacks of residual blocks."""
     def __init__(self, config: Config):
         super().__init__()
         self.flatten = nn.Flatten()
         self.config = config
-        layers = []
-        input_size = config.INPUT_SIZE
+        self.layer_stack = nn.ModuleList()
+
+        if not config.HIDDEN_LAYERS:
+            # Handle edge case of no hidden layers
+            self.layer_stack.append(nn.Linear(config.INPUT_SIZE, config.OUTPUT_SIZE))
+            return
+
+        # Parse architecture into (depth, width) tuples
+        arch_defs = []
         if config.HIDDEN_LAYERS:
-            for hidden_size in config.HIDDEN_LAYERS:
-                layers.append(nn.Linear(input_size, hidden_size))
-                layers.append(nn.ReLU())
-                # Always add dropout layers for consistent architecture
-                # They will be activated/deactivated during forward pass based on ablation mode
-                layers.append(nn.Dropout(config.DROPOUT_RATE))
-                input_size = hidden_size
-        layers.append(nn.Linear(input_size, config.OUTPUT_SIZE))
-        self.layer_stack = nn.Sequential(*layers)
+            i = 0
+            while i < len(config.HIDDEN_LAYERS):
+                size = config.HIDDEN_LAYERS[i]
+                count = 1
+                while i + count < len(config.HIDDEN_LAYERS) and config.HIDDEN_LAYERS[i + count] == size:
+                    count += 1
+                arch_defs.append({'depth': count, 'width': size})
+                i += count
+        
+        # Build the dynamic architecture
+        current_width = config.INPUT_SIZE
+        for i, definition in enumerate(arch_defs):
+            block_width = definition['width']
+            block_depth = definition['depth']
+
+            # Add a transition layer if widths differ
+            if current_width != block_width:
+                self.layer_stack.append(nn.Linear(current_width, block_width))
+                self.layer_stack.append(nn.ReLU())
+                # Add dropout for transition layers
+                self.layer_stack.append(nn.Dropout(config.DROPOUT_RATE))
+            
+            self.layer_stack.append(ResNetStack(block_depth, block_width, config.DROPOUT_RATE))
+            current_width = block_width
+
+        # Add the final projection layer
+        self.layer_stack.append(nn.Linear(current_width, config.OUTPUT_SIZE))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # Set dropout layers to eval mode if not using dropout ablation mode
+        x = self.flatten(x)
+        
+        # Handle dropout layers based on ablation mode
         if self.config.ABLATION_MODE != "dropout":
             # Temporarily set all dropout layers to eval mode
             dropout_layers = [layer for layer in self.layer_stack if isinstance(layer, nn.Dropout)]
@@ -226,65 +280,95 @@ class SimpleMLP(nn.Module):
             for layer in dropout_layers:
                 layer.eval()
         
-        result = self.layer_stack(self.flatten(x))
+        for layer in self.layer_stack:
+            x = layer(x)
         
         # Restore original training modes
         if self.config.ABLATION_MODE != "dropout":
             for layer, original_mode in zip(dropout_layers, original_modes):
                 layer.train(original_mode)
         
-        return result
+        return x
 
 class Ablator:
-    """Handles different modes of neuron ablation for deep networks."""
-    def __init__(self, model: nn.Module, mode: str, log: logging.Logger):
+    """Handles different modes of neuron ablation for the ResMLP."""
+    def __init__(self, model: ResMLP, mode: str, log: logging.Logger):
         self.log = log
         self.mode = mode
         self.ablatable_targets = []
-        if self.mode == "hidden": self._index_hidden_neurons(model)
-        elif self.mode == "full": self._index_full_layers(model)
-        elif self.mode == "output": self._index_output_layer(model)
+        # Only set up ablation targets for actual ablation modes
+        if self.mode == "hidden": 
+            self._index_hidden_neurons(model)
+        elif self.mode == "full": 
+            self._index_full_layers(model)
+        elif self.mode == "output": 
+            self._index_output_layer(model)
+        # baseline modes (none, decay, dropout) don't need ablation targets
 
-    def _index_full_layers(self, model: nn.Module):
+    def _get_all_linear_layers_in_order(self, model: ResMLP) -> list[nn.Linear]:
+        """Traverses the model and returns a flat list of linear layers in compute order."""
+        linear_layers = []
+        for module in model.layer_stack:
+            if isinstance(module, nn.Linear):
+                linear_layers.append(module)
+            elif isinstance(module, ResNetStack):
+                for block in module.blocks:
+                    # Layers inside a ResidualBlock are in a Sequential
+                    linear_layers.append(block.layers[0])
+                    linear_layers.append(block.layers[3])  # Second linear layer (index 3 due to dropout)
+        return linear_layers
+
+    def _index_full_layers(self, model: ResMLP):
+        """Indexes all linear layers for the 'full' ablation mode."""
+        all_linear_layers = self._get_all_linear_layers_in_order(model)
+        module_to_name = {v: k for k, v in model.named_modules()}
+        
         for name, module in model.named_modules():
-            if isinstance(module, nn.Linear): self.ablatable_targets.append({'name': name, 'module': module})
+            if isinstance(module, nn.Linear): 
+                self.ablatable_targets.append({'name': name, 'module': module})
         self.log.info(f"Ablator (full mode) indexed {len(self.ablatable_targets)} total linear layers.")
 
-    def _index_hidden_neurons(self, model: nn.Module):
-        linear_layers = [m for m in model.modules() if isinstance(m, nn.Linear)]
-        if len(linear_layers) <= 1:
+    def _index_hidden_neurons(self, model: ResMLP):
+        """Indexes hidden neurons for the 'hidden' ablation mode."""
+        all_linear_layers = self._get_all_linear_layers_in_order(model)
+        if len(all_linear_layers) <= 1:
             self.log.warning("Ablator (hidden mode) found no hidden layers to index.")
             return
-        hidden_layers, output_layer = linear_layers[:-1], linear_layers[-1]
-        module_to_name = {v: k for k, v in dict(model.named_modules()).items()}
-        self.log.info(f"Ablator (hidden mode) identified {len(hidden_layers)} hidden layer(s).")
-        for i, layer in enumerate(hidden_layers):
-            layer_name = module_to_name[layer]
-            next_layer = hidden_layers[i + 1] if i + 1 < len(hidden_layers) else output_layer
-            next_layer_name = module_to_name[next_layer]
-            for neuron_idx in range(layer.out_features):
+        
+        # Hidden layers are all linear layers EXCEPT the first and last
+        hidden_layers_with_successors = list(zip(all_linear_layers[1:-1], all_linear_layers[2:]))
+        module_to_name = {v: k for k, v in model.named_modules()}
+        
+        self.log.info(f"Ablator (hidden mode) identified {len(hidden_layers_with_successors)} hidden layers for ablation.")
+
+        for current_layer, successor_layer in hidden_layers_with_successors:
+            layer_name = module_to_name[current_layer]
+            next_layer_name = module_to_name[successor_layer]
+            for neuron_idx in range(current_layer.out_features):
                 self.ablatable_targets.append({
                     "layer_name": layer_name, "neuron_idx": neuron_idx,
                     "incoming_weight_key": f"{layer_name}.weight",
                     "incoming_bias_key": f"{layer_name}.bias",
                     "outgoing_weight_key": f"{next_layer_name}.weight"
                 })
-        if self.ablatable_targets: self.log.info(f"Ablator (hidden mode) indexed {len(self.ablatable_targets)} hidden neurons.")
+        if self.ablatable_targets: 
+            self.log.info(f"Ablator (hidden mode) indexed {len(self.ablatable_targets)} hidden neurons.")
 
-    def _index_output_layer(self, model: nn.Module):
+    def _index_output_layer(self, model: ResMLP):
         """Indexes only the final linear layer for the 'output' ablation mode."""
-        linear_layers = [m for m in model.modules() if isinstance(m, nn.Linear)]
-        if not linear_layers:
+        all_linear_layers = self._get_all_linear_layers_in_order(model)
+        if not all_linear_layers:
             self.log.warning("Ablator (output mode) found no linear layers.")
             return
-        output_layer_module = linear_layers[-1]
-        module_to_name = {v: k for k, v in dict(model.named_modules()).items()}
+        output_layer_module = all_linear_layers[-1]
+        module_to_name = {v: k for k, v in model.named_modules()}
         output_layer_name = module_to_name[output_layer_module]
         self.ablatable_targets.append({'name': output_layer_name, 'module': output_layer_module})
         self.log.info(f"Ablator (output mode) indexed the final output layer: '{output_layer_name}'.")
 
-    def ablate(self, model: nn.Module) -> dict:
-        if self.mode == "none" or not self.ablatable_targets: return model.state_dict()
+    def ablate(self, model: ResMLP) -> dict:
+        if self.mode == "none" or not self.ablatable_targets: 
+            return model.state_dict()
         state_dict = copy.deepcopy(model.state_dict())
 
         if self.mode == "output":
@@ -293,14 +377,18 @@ class Ablator:
             idx = random.randint(0, module.out_features - 1)
             self.log.info(f"🧠 (Output Mode) Partially ablating neuron {idx} in output layer '{name}'.")
             state_dict[f"{name}.weight"][idx, :] = 0.0
-            if module.bias is not None: state_dict[f"{name}.bias"][idx] = 0.0
+            if module.bias is not None: 
+                state_dict[f"{name}.bias"][idx] = 0.0
+        
         elif self.mode == "full":
             target = random.choice(self.ablatable_targets)
             name, module = target['name'], target['module']
             idx = random.randint(0, module.out_features - 1)
             self.log.info(f"🧠 (Full Mode) Partially ablating neuron {idx} in layer '{name}'.")
             state_dict[f"{name}.weight"][idx, :] = 0.0
-            if module.bias is not None: state_dict[f"{name}.bias"][idx] = 0.0
+            if module.bias is not None: 
+                state_dict[f"{name}.bias"][idx] = 0.0
+        
         elif self.mode == "hidden":
             target = random.choice(self.ablatable_targets)
             name, idx = target['layer_name'], target['neuron_idx']
@@ -308,59 +396,61 @@ class Ablator:
             state_dict[target['incoming_weight_key']][idx, :] = 0.0
             state_dict[target['incoming_bias_key']][idx] = 0.0
             state_dict[target['outgoing_weight_key']][:, idx] = 0.0
+        
         return state_dict
 
 # --- 3. UI and Helper Functions ---
 
-def display_architecture_summary(model: SimpleMLP, config: Config, console: Console):
-    """Create and print a summary table of the model's architecture."""
-    table = Table(title=f"Model Architecture Summary: {config.ARCH_STRING}", show_header=True, header_style="bold magenta")
-    table.add_column("Metric", style="dim")
+def display_architecture_summary(model: ResMLP, config: Config, console: Console):
+    """Creates and prints a summary table of the ResMLP model's architecture."""
+    table = Table(title=f"ResMLP Architecture Summary: {config.ARCH_STRING}", show_header=True, header_style="bold magenta")
     
-    groups = []
-    if config.HIDDEN_LAYERS:
-        i = 0
-        while i < len(config.HIDDEN_LAYERS):
-            size = config.HIDDEN_LAYERS[i]
-            count = 1
-            while i + count < len(config.HIDDEN_LAYERS) and config.HIDDEN_LAYERS[i + count] == size:
-                count += 1
-            groups.append({'start_idx': i, 'count': count, 'size': size})
-            i += count
-
-    table.add_column("Input (i)", justify="right")
-    for group in groups:
-        header = f"h_{group['start_idx']}" if group['count'] == 1 else f"h_{group['start_idx']}-{group['start_idx'] + group['count'] - 1}"
-        table.add_column(header, justify="right")
-    table.add_column("Output (o)", justify="right")
-
-    shapes, params = ["Shape"], ["Parameters"]
-    shapes.append(f"{config.INPUT_SIZE}")
+    headers, shapes, params = ["Metric"], ["Shape"], ["Parameters"]
+    
+    current_width = config.INPUT_SIZE
+    shapes.append(f"{current_width}")
     params.append("-")
 
-    linear_layers = [m for m in model.modules() if isinstance(m, nn.Linear)]
-    
-    group_idx = 0
-    layer_idx_in_group = 0
-    for i, linear_layer in enumerate(linear_layers[:-1]):
-        if layer_idx_in_group == 0:
-            shapes.append(f"{linear_layer.in_features} → {linear_layer.out_features}")
-            group_params = sum(
-                sum(p.numel() for p in layer.parameters()) 
-                for layer in linear_layers[i : i + groups[group_idx]['count']]
-            )
-            params.append(f"{group_params:,}")
-
-        layer_idx_in_group += 1
-        if layer_idx_in_group >= groups[group_idx]['count']:
-            group_idx += 1
-            layer_idx_in_group = 0
+    for i, module in enumerate(model.layer_stack):
+        if isinstance(module, nn.Linear):
+            # Infer if it's initial, transition, or final
+            if i == 0 and len(model.layer_stack) > 1: 
+                header = "Initial Proj."
+            elif i == len(model.layer_stack) - 1: 
+                header = "Final Proj."
+            else: 
+                header = "Transition"
             
-    output_layer = linear_layers[-1]
-    shapes.append(f"{output_layer.in_features} → {output_layer.out_features}")
-    p = sum(p.numel() for p in output_layer.parameters())
-    params.append(f"{p:,}")
+            shapes.append(f"{module.in_features} → {module.out_features}")
+            p = sum(p.numel() for p in module.parameters())
+            params.append(f"{p:,}")
+        
+        elif isinstance(module, nn.ReLU):
+            header = f"ReLU_{i-1}"
+            shapes.append("✓")
+            params.append("-")
+            continue # Skip adding a new column for ReLUs
 
+        elif isinstance(module, nn.Dropout):
+            header = f"Dropout_{i-1}"
+            shapes.append("✓")
+            params.append("-")
+            continue # Skip adding a new column for Dropout
+
+        elif isinstance(module, ResNetStack):
+            block = module.blocks[0]
+            depth = len(module.blocks)
+            width = block.layers[0].in_features
+            header = f"ResStack ({depth}x{width})"
+            shapes.append(f"{width} → {width}")
+            p = sum(p.numel() for p in module.parameters())
+            params.append(f"{p:,}")
+        
+        headers.append(header)
+
+    # Add columns and rows to table
+    for h in headers: 
+        table.add_column(h, justify="center")
     table.add_row(*shapes)
     table.add_row(*params)
     console.print(table)
@@ -409,9 +499,13 @@ def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoade
     test_ds = TensorDataset(test_images, test_labels)
 
     # Step 5: Return DataLoaders that now wrap the in-memory datasets.
-    return DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.NUM_WORKERS, pin_memory=True), \
-           DataLoader(val_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True), \
-           DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=config.NUM_WORKERS, pin_memory=True)
+    # Use num_workers=0 for in-memory data to avoid overhead
+    # Disable pin_memory on MPS (not supported) and use smaller batch for validation
+    pin_memory = config.DEVICE == "cuda"  # Only use pin_memory for CUDA
+    
+    return DataLoader(train_ds, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=0, pin_memory=pin_memory), \
+           DataLoader(val_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=0, pin_memory=pin_memory), \
+           DataLoader(test_ds, batch_size=config.BATCH_SIZE * 2, shuffle=False, num_workers=0, pin_memory=pin_memory)
 
 # --- 4. Training & Evaluation Functions ---
 
@@ -450,11 +544,12 @@ def run_single_experiment(config: Config, console: Console, log: logging.Logger)
     Contains the logic for ONE full experimental run (100 meta-loops).
     Returns the final best accuracy (bounty) for this single run.
     """
-    model = SimpleMLP(config).to(config.DEVICE)
+    model = ResMLP(config).to(config.DEVICE)
     ablator = Ablator(model, config.ABLATION_MODE, log)
     criterion = nn.CrossEntropyLoss()
 
     log.info(f"Model has {sum(p.numel() for p in model.parameters()):,} parameters.")
+    display_architecture_summary(model, config, console)
     train_loader, val_loader, test_loader = get_mnist_loaders(config)
 
     lkg_score, bounty = -1.0, -1.0
@@ -499,7 +594,7 @@ def run_single_experiment(config: Config, console: Console, log: logging.Logger)
                 
                 log.info(f"Loop {loop + 1}/{config.NUM_META_LOOPS} (Global: {current_global_loop}) | Current: {new_score:.2f}% | LKG: {lkg_score:.2f}% | Bounty: {bounty:.2f}%")
 
-                temp_model = SimpleMLP(config)
+                temp_model = ResMLP(config)
                 temp_model.load_state_dict(lkg_model_state)
                 if config.ABLATION_MODE not in ['none', 'decay', 'dropout']:
                     active_model_state = ablator.ablate(temp_model)
@@ -531,7 +626,7 @@ def main():
     log = setup_logging(config.DEBUG, console)
     all_bounties = []
 
-    console.print(Panel(f"[bold yellow]Executing {config.NUM_RUNS} runs for Arch: {config.ARCH_STRING}, Mode: {config.ABLATION_MODE}[/bold yellow]",
+    console.print(Panel(f"[bold yellow]Executing {config.NUM_RUNS} runs for ResMLP Arch: {config.ARCH_STRING}, Mode: {config.ABLATION_MODE}[/bold yellow]",
                         subtitle=f"Device: {config.DEVICE}"))
 
     for i in range(config.NUM_RUNS):

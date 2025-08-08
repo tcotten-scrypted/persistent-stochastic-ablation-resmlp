@@ -22,7 +22,7 @@ matplotlib = "^3.8.0"
 scipy = "1.10.1"
 
 [tool.poetry.scripts]
-train = "src.train_psa_simplemlp:main"
+train = "src.train_psa_resmlp:main"
 clean = "scripts.clean:main"
 clean-all = "scripts.clean_all:main"
 generate-reproduction-tests = "scripts.generate_reproduction_tests:main"
