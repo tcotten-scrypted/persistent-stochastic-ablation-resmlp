@@ -208,7 +208,7 @@ class LogParser:
         
         # Create markdown table
         lines = [
-            "# PSA SimpleMLP Trials - LKG Growth Analysis",
+            "# PSA ResMLP Trials - LKG Growth Analysis",
             "",
             "This table shows the Last Known Good (LKG) growth per meta-loop for each architecture and ablation mode.",
             "Values represent the improvement in validation accuracy from the previous LKG (0.0 if no improvement).",
@@ -257,7 +257,7 @@ class LogParser:
         
         # Create markdown table
         lines = [
-            "# PSA SimpleMLP Trials - Convergence Analysis",
+            "# PSA ResMLP Trials - Convergence Analysis",
             "",
             "This table shows the validation accuracy per meta-loop for each architecture and ablation mode.",
             "",
@@ -320,8 +320,8 @@ def main():
     parser.parse_all_jobs()
     
     # Generate markdown files
-    lkg_output = output_dir / "psa_simplemlp_trials_lkg_growth.md"
-    convergence_output = output_dir / "psa_simplemlp_trials_convergence.md"
+    lkg_output = output_dir / "psa_resmlp_trials_lkg_growth.md"
+    convergence_output = output_dir / "psa_resmlp_trials_convergence.md"
     
     parser.generate_lkg_growth_markdown(lkg_output)
     parser.generate_convergence_markdown(convergence_output)

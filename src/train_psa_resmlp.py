@@ -3,14 +3,12 @@
 # Author: Tim Cotten @cottenio <tcotten@scrypted.ai, tcotten2@gmu.edu> 
 #
 # Description:
-# A comprehensive training harness for testing architectural variations and six
-# distinct live ablation strategies on the MNIST dataset using ResMLP architecture.
+# A comprehensive training harness for testing architectural variations and four
+# distinct live ablation strategies on the MNIST dataset.
 #
 # Core Concepts:
 # 1. Six Ablation Modes:
 #    - 'none': Control group.
-#    - 'decay': Traditional weight decay regularization
-#    - 'dropout': Traditional dropout regularization
 #    - 'full': Partially ablates a neuron in ANY linear layer (hidden or output).
 #    - 'hidden': Fully ablates a neuron in a HIDDEN layer only.
 #    - 'output': Partially ablates a neuron in the OUTPUT layer only.
@@ -108,11 +106,11 @@ class Config:
         return Path(self.MODEL_DIR) / self.CHECKPOINT_NAME
 
 def parse_arch_string(arch_str: str) -> list[int]:
-    """Parses an architecture string like '[4*4, 2*8]' into a list like [4, 4, 4, 4, 8, 8]."""
+    """Parse architecture string '[4*4, 2*8]' into list [4, 4, 8, 8]."""
     if not re.match(r'^\[[\d\s,\*]+\]$', arch_str):
         raise ValueError(f"Invalid architecture string format: {arch_str}")
 
-    content = arch_str.strip()[1:-1]
+    content = arch_str.strip()[1:-1] # Remove brackets
     if not content:
         return []
 
@@ -127,44 +125,57 @@ def parse_arch_string(arch_str: str) -> list[int]:
     return hidden_dims
 
 def get_config() -> Config:
-    """Parses command-line arguments and returns a Config dataclass instance."""
-    parser = argparse.ArgumentParser(description="Frustration Engine Trainer for MNIST (ResMLP Version)")
+    """Parse command-line arguments and return a Config dataclass instance."""
+    parser = argparse.ArgumentParser(description="Persistent Stochastic Ablation Trainer for MNIST")
     parser.add_argument("--model-dir", type=str, default="models/", help="Path to store/retrieve models.")
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate.")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size for training.")
     parser.add_argument("--meta-loops", type=int, default=100, help="Total meta-loops to run.")
-    parser.add_argument("--arch", type=str, default="[1*256]", help="Define architecture with a string, e.g., '[4*8, 2*16]'.")
-    parser.add_argument("--ablation-mode", type=str, default="none", 
-                       choices=["none", "decay", "dropout", "full", "hidden", "output"], 
-                       help="Set the ablation mode.")
+    parser.add_argument(
+        "--arch", type=str, default=None,
+        help="Define architecture with a string, e.g., '[4*4, 2*8, 1*16]'."
+    )
+    parser.add_argument(
+        "--hidden-layers", type=int, nargs='+', default=[1024],
+        help="A list of hidden layer sizes (used if --arch is not provided)."
+    )
+    parser.add_argument(
+        "--ablation-mode", type=str, default="none", 
+        choices=["none", "decay", "dropout", "full", "hidden", "output"],
+        help="Set the ablation mode."
+    )
     parser.add_argument("--debug", action="store_true", help="Enable verbose debug logging.")
     parser.add_argument("--num-workers", type=int, default=4, help="DataLoader workers.")
     parser.add_argument("--device", type=str, choices=["cpu", "cuda", "mps"], 
-                       help="Override device detection.")
-    parser.add_argument("--weight-decay", type=float, default=1e-4, 
-                       help="Weight decay rate (only used with 'decay' mode).")
-    parser.add_argument("--dropout", type=float, default=0.1, 
-                       help="Dropout rate (only used with 'dropout' mode).")
+                       help="Override device detection (cpu, cuda, mps)")
+    parser.add_argument("--weight-decay", type=float, default=Config.WEIGHT_DECAY, 
+                       help="Weight decay rate (only used with --ablation-mode decay)")
+    parser.add_argument("--dropout", type=float, default=Config.DROPOUT_RATE, 
+                       help="Dropout rate (only used with --ablation-mode dropout)")
     args = parser.parse_args()
 
-    hidden_layers = parse_arch_string(args.arch)
+    if args.arch:
+        hidden_layers = parse_arch_string(args.arch)
+        arch_string_for_display = args.arch
+    else:
+        hidden_layers = args.hidden_layers
+        arch_string_for_display = f"[{'*'.join(map(str, [len(hidden_layers), hidden_layers[0]])) if len(set(hidden_layers)) == 1 else 'Custom'}]"
 
-    model_dir = Path(args.model_dir)
+
+    # Check for SageMaker environment variable
+    sagemaker_model_dir = os.environ.get("SAGEMAKER_MODEL_DIR")
+    if sagemaker_model_dir:
+        model_dir = Path(sagemaker_model_dir)
+    else:
+        model_dir = Path(args.model_dir)
+    
     model_dir.mkdir(parents=True, exist_ok=True)
 
     # Handle device override
     device = args.device if args.device else detect_best_device()
 
-    # Create a readable architecture string for display
-    arch_string_for_display = args.arch
-    if hidden_layers:
-        if len(set(hidden_layers)) == 1:
-            arch_string_for_display = f"[{'*'.join(map(str, [len(hidden_layers), hidden_layers[0]]))}]"
-        else:
-            arch_string_for_display = f"[Custom]"
-
     config = Config(
-        MODEL_DIR=args.model_dir,
+        MODEL_DIR=str(model_dir),
         LEARNING_RATE=args.lr,
         BATCH_SIZE=args.batch_size,
         NUM_META_LOOPS=args.meta_loops,
@@ -182,13 +193,13 @@ def get_config() -> Config:
     return config
 
 def setup_logging(is_debug: bool, console: Console) -> logging.Logger:
-    """Configures logging to be pretty and informative."""
+    """Configure logging with rich formatting."""
     log_level = "DEBUG" if is_debug else "INFO"
     logging.basicConfig(level=log_level, format="%(message)s", datefmt="[%X]",
                         handlers=[RichHandler(rich_tracebacks=True, show_path=is_debug, console=console)])
     return logging.getLogger("rich")
 
-# --- 2. Core Model and Ablator (ResMLP Implementation) ---
+# --- 2. Core Model and Ablator ---
 
 class ResidualBlock(nn.Module):
     """A single residual block: Linear -> ReLU -> Linear, with a skip connection."""
@@ -277,6 +288,7 @@ class ResMLP(nn.Module):
                 layer.train(original_mode)
         
         return x
+
 
 class Ablator:
     """Handles different modes of neuron ablation for the ResMLP."""
@@ -443,6 +455,7 @@ def display_architecture_summary(model: ResMLP, config: Config, console: Console
     table.add_row(*params)
     console.print(table)
 
+
 def get_mnist_loaders(config: Config) -> tuple[DataLoader, DataLoader, DataLoader]:
     """
     Create train/validation/test splits for MNIST with optimized data loading:
@@ -538,7 +551,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
     
     console.print(Panel.fit(
-        "[bold magenta]Frustration Engine: MNIST Ablation Test (ResMLP Version)[/bold magenta]",
+        "[bold magenta]Frustration Engine: MNIST Ablation Test[/bold magenta]",
         subtitle=f"Ablation Mode: [yellow]{config.ABLATION_MODE}[/yellow] | Device: {config.DEVICE}"
     ))
     display_architecture_summary(model, config, console)
@@ -632,11 +645,6 @@ def main():
                     lkg_score, lkg_model_state = new_score, copy.deepcopy(model.state_dict())
                     # Save checkpoint with metadata
                     # Use torch.save for the full checkpoint with metadata
-                    # Update bounty meta loop if this is a new bounty
-                    if lkg_score > bounty:
-                        bounty = lkg_score
-                        config.BOUNTY_META_LOOP = current_global_loop
-                    
                     checkpoint_data = {
                         'model_state': lkg_model_state,
                         'global_meta_loops': config.GLOBAL_META_LOOPS + loop + 1,
@@ -645,6 +653,8 @@ def main():
                     torch.save(checkpoint_data, checkpoint_path)
                     status, message = "[bold green]IMPROVEMENT[/bold green]", "New LKG. Checkpoint saved."
                     if lkg_score > bounty:
+                        bounty = lkg_score
+                        config.BOUNTY_META_LOOP = current_global_loop
                         message += f" 🏆 New Bounty: {bounty:.2f}% @ {current_global_loop}"
                 else:
                     status, message = "[bold red]NO IMPROVEMENT[/bold red]", "Discarding weights."
@@ -681,4 +691,4 @@ def main():
             console.print(Panel.fit(f"[bold green]✅ Training Finished. Final Bounty (Validation): {bounty:.2f}% @ {config.BOUNTY_META_LOOP}/{config.GLOBAL_META_LOOPS}[/bold green]"))
 
 if __name__ == "__main__":
-    main() 
+    main()

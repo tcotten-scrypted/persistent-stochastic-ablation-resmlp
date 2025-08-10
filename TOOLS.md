@@ -6,7 +6,7 @@ This document describes the utility scripts available in the `scripts/` folder f
 
 ### `analyze_dataset.py`
 
-Analyze MNIST dataset using the exact same methodology as PSA SimpleMLP training.
+Analyze MNIST dataset using the exact same methodology as PSA ResMLP training.
 
 **Purpose**: Provides comprehensive statistics about MNIST class distribution and ZeroR baselines using the identical data loading and splitting methodology as the training code, ensuring consistency between analysis and experimental results.
 
@@ -25,7 +25,7 @@ poetry run analyze-dataset
 - **Summary Comparison**: Side-by-side comparison of all dataset splits
 
 **Features**:
-- **Exact Methodology**: Uses identical data loading, transforms, and splitting as `train_psa_simplemlp.py`
+- **Exact Methodology**: Uses identical data loading, transforms, and splitting as `train_psa_resmlp.py`
 - **Reproducible Splits**: Same random seed (1337) for train/validation splitting
 - **Structured Output**: Returns `MNISTAnalysis` object for programmatic access
 - **ZeroR Calculation**: Baseline accuracy using most frequent class strategy
@@ -47,7 +47,7 @@ poetry run analyze-dataset
 
 Rule-based classification system for determining training regimes based on PSA trial data.
 
-**Purpose**: Provides a clean, modular interface for classifying SimpleMLP configurations into four distinct training regimes based on performance patterns observed in comprehensive trial data. Uses data-driven rules to categorize architectures by their response to different ablation strategies.
+**Purpose**: Provides a clean, modular interface for classifying ResMLP configurations into four distinct training regimes based on performance patterns observed in comprehensive trial data. Uses data-driven rules to categorize architectures by their response to different ablation strategies.
 
 **Usage**:
 ```python
@@ -62,7 +62,7 @@ print(f"1x512 is: {regime}")
 # Classify all architectures
 classifications = get_all_regime_classifications(
     Path('reproduction/configurations.txt'), 
-    Path('results/psa_simplemlp_trials.md')
+    Path('results/psa_resmlp_trials.md')
 )
 ```
 
@@ -244,7 +244,7 @@ python scripts/make_figure_design_space.py --config-file reproduction/my_configs
 
 Generate comprehensive heat map visualizations for ResMLP design space.
 
-**Purpose**: Creates a suite of six data-driven heat map visualizations that tell a comprehensive story about the SimpleMLP design space under Persistent Stochastic Ablation (PSA).
+**Purpose**: Creates a suite of six data-driven heat map visualizations that tell a comprehensive story about the ResMLP design space under Persistent Stochastic Ablation (PSA).
 
 **Usage**:
 ```bash
@@ -297,8 +297,8 @@ poetry run sagemaker-results-parser
 - `.env` file with AWS configuration in `aws/sagemaker/` (copy from `.env.example`)
 
 **Output Files:**
-- `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
-- `results/psa_simplemlp_trials.md` - Raw trial data in markdown tables
+- `results/psa_resmlp_summary.md` - Statistical summary of all experiments
+- `results/psa_resmlp_trials.md` - Raw trial data in markdown tables
 
 ### `reconstruct_jobs.py`
 
@@ -504,8 +504,8 @@ poetry run sagemaker-logs-parser --logs-dir /path/to/logs --output-dir /path/to/
 ```
 
 **Output Files**:
-- `results/psa_simplemlp_trials_lkg_growth.md`: LKG growth analysis table
-- `results/psa_simplemlp_trials_convergence.md`: Convergence analysis table
+- `results/psa_resmlp_trials_lkg_growth.md`: LKG growth analysis table
+- `results/psa_resmlp_trials_convergence.md`: Convergence analysis table
 
 **Table Format**:
 - **LKG Growth Table**: Shows improvement in validation accuracy from previous LKG per meta-loop

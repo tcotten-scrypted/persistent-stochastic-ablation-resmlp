@@ -324,7 +324,7 @@ def main():
     
     # Generate plot
     CONSOLE.print("\n🎨 Generating convergence plot...", style="blue")
-    output_file = output_dir / "SimpleMLP_Plot_Convergence.png"
+    output_file = output_dir / "ResMLP_Plot_Convergence.png"
     create_convergence_plot(convergence_data, target_architectures, output_file)
     
     CONSOLE.print(f"\n✅ Convergence plot generated successfully!", style="bold green")

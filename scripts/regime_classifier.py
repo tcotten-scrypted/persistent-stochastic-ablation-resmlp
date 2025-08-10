@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Regime Classifier Module for SimpleMLP PSA Analysis
+Regime Classifier Module for ResMLP PSA Analysis
 
 This module provides a clean interface for determining the training regime
-of any SimpleMLP configuration based on Persistent Stochastic Ablation (PSA) trial data.
+of any ResMLP configuration based on Persistent Stochastic Ablation (PSA) trial data.
 This version uses rule-based classification based on the performance patterns
 observed in the comprehensive trial data.
 
@@ -336,7 +336,7 @@ def get_all_regime_classifications(configurations_file: Path, trials_file: Path)
 
 if __name__ == "__main__":
     configs_file = Path('reproduction/configurations.txt')
-    trials_file = Path('results/psa_simplemlp_trials.md')
+    trials_file = Path('results/psa_resmlp_trials.md')
     
     if configs_file.exists() and trials_file.exists():
         classifications = get_all_regime_classifications(configs_file, trials_file)
@@ -359,4 +359,4 @@ if __name__ == "__main__":
                 for i in range(0, len(configs), 4):
                     print("  ".join(f"{c:<10}" for c in configs[i:i+4]))
     else:
-        print("Error: Configuration or trials file not found. Ensure 'reproduction/configurations.txt' and 'results/psa_simplemlp_trials.md' exist.")
+        print("Error: Configuration or trials file not found. Ensure 'reproduction/configurations.txt' and 'results/psa_resmlp_trials.md' exist.")

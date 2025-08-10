@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Dataset Analysis Utility for MNIST using PSA SimpleMLP methodology.
+Dataset Analysis Utility for MNIST using PSA ResMLP methodology.
 
-This script analyzes the MNIST dataset using the exact same data loading and splitting
-methodology as the PSA SimpleMLP training code, providing detailed statistics about
-class distribution and ZeroR baselines.
+This script provides comprehensive statistics about the MNIST dataset using the same
+methodology as the PSA ResMLP training code, providing detailed statistics about
+the dataset splits to ensure consistency and provide baseline references.
 
 Author: Tim Cotten @cottenio <tcotten@scrypted.ai, tcotten2@gmu.edu>
 """
@@ -72,7 +72,7 @@ def analyze_dataset(labels: torch.Tensor, name: str) -> DatasetStats:
 
 def get_mnist_data_splits() -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
-    Load and split MNIST data using the exact same methodology as PSA SimpleMLP.
+    Load and split MNIST data using the exact same methodology as PSA ResMLP.
     Returns: (full_train_labels, full_test_labels, split_train_labels, split_val_labels)
     """
     # Use the same transform as the training code
@@ -106,7 +106,7 @@ def get_mnist_data_splits() -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, t
 
 def analyze_mnist() -> MNISTAnalysis:
     """
-    Perform complete MNIST analysis using PSA SimpleMLP methodology.
+    Perform complete MNIST analysis using PSA ResMLP methodology.
     Returns structured analysis object.
     """
     # Get data splits using exact same methodology as training
@@ -181,7 +181,7 @@ def main():
     
     console.print(Panel.fit(
         "[bold magenta]MNIST Dataset Analysis[/bold magenta]",
-        subtitle="Using PSA SimpleMLP Data Loading Methodology"
+        subtitle="Using PSA ResMLP Data Loading Methodology"
     ))
     
     console.print("[bold blue]Analyzing MNIST dataset...[/bold blue]")
@@ -205,7 +205,7 @@ def main():
     
     console.print(Panel.fit(
         "[bold green]✅ Analysis Complete[/bold green]",
-        subtitle="All statistics computed using exact PSA SimpleMLP methodology"
+        subtitle="All statistics computed using exact PSA ResMLP methodology"
     ))
 
 

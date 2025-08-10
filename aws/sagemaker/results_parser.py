@@ -196,7 +196,7 @@ def main():
     
     # --- PART 1: WRITE THE SUMMARY FILE ---
     with open(SUMMARY_FILE, 'w') as f:
-        f.write("# Persistent Stochastic Ablation - SimpleMLP Results Summary\n\n")
+        f.write("# Persistent Stochastic Ablation - ResMLP Results Summary\n\n")
         f.write("## Statistical Summary\n\n")
         for config, modes in all_results.items():
             p_count = params[config]
@@ -216,7 +216,7 @@ def main():
 
     # --- PART 2: WRITE THE TRIALS FILE ---
     with open(TRIALS_FILE, 'w') as f:
-        f.write("# Persistent Stochastic Ablation - SimpleMLP Raw Trial Data\n\n")
+        f.write("# Persistent Stochastic Ablation - ResMLP Raw Trial Data\n\n")
         f.write("## Raw Trial Data\n\n")
         for config, modes in all_results.items():
             f.write(f"### Architecture: {config}\n\n")

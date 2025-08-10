@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the PSA SimpleMLP project are documented in this file.
+All notable changes to the PSA ResMLP project are documented in this file.
 
 ## [Unreleased] - 2024-12-19
 
@@ -8,7 +8,7 @@ All notable changes to the PSA SimpleMLP project are documented in this file.
 
 #### New Analysis Tools
 - **`analyze_dataset.py`**: Comprehensive MNIST dataset analysis tool
-  - Uses exact same methodology as PSA SimpleMLP training code
+  - Uses exact same methodology as PSA ResMLP training code
   - Provides class distribution statistics for all dataset splits
   - Calculates ZeroR baselines for each split (11.24% train, 11.35% test, 11.28% split-train, 11.02% validation)
   - Available as `poetry run analyze-dataset` command
@@ -111,13 +111,13 @@ All notable changes to the PSA SimpleMLP project are documented in this file.
 - `pyproject.toml` - Added new script entry point
 
 #### Generated/Updated Files
-- `results/SimpleMLP_Heatmap_Regimes.png` - New regime classification heatmap
+- `results/ResMLP_Heatmap_Regimes.png` - New regime classification heatmap
 - All existing heatmap PNG files - Regenerated with enhanced visualizations
-- `results/psa_simplemlp_summary.md` - Updated with latest trial results
-- `results/psa_simplemlp_trials.md` - Updated with comprehensive trial data
+- `results/psa_resmlp_summary.md` - Updated with latest trial results
+- `results/psa_resmlp_trials.md` - Updated with comprehensive trial data
 
 ### Notes
 
-This release represents a significant enhancement to the PSA SimpleMLP analysis toolkit, transitioning from heuristic-based classification to a comprehensive, data-driven approach. The new regime classification system provides robust, reproducible categorization of training behaviors, while the enhanced visualization suite offers deeper insights into the experimental results.
+This release represents a significant enhancement to the PSA ResMLP analysis toolkit, transitioning from heuristic-based classification to a comprehensive, data-driven approach. The new regime classification system provides robust, reproducible categorization of training behaviors, while the enhanced visualization suite offers deeper insights into the experimental results.
 
 The addition of dataset analysis tools ensures consistency between experimental setup and analysis methodology, providing important baseline references for interpreting results.

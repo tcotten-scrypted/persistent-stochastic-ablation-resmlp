@@ -18,10 +18,12 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 import shutil
 
-# Import the Config class from the trainer to get default values
-sys.path.append(str(Path(__file__).parent.parent / "src"))
-import importlib.util
-spec = importlib.util.spec_from_file_location("trainer", Path(__file__).parent.parent / "src" / "train_psa_simplemlp.py")
+# Add the src directory to sys.path to allow importing the trainer
+src_dir = Path(__file__).parent.parent / "src"
+sys.path.insert(0, str(src_dir))
+
+# Dynamically load the get_config function from the training script
+spec = importlib.util.spec_from_file_location("trainer", src_dir / "train_psa_resmlp.py")
 trainer_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(trainer_module)
 Config = trainer_module.Config

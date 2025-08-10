@@ -179,7 +179,7 @@ def save_and_close(fig: plt.Figure, output_file: Path):
 
 def plot_baseline_performance(architectures: list, metrics: dict, output_file: Path):
     """Plot baseline performance (control model accuracy)."""
-    fig, ax = setup_plot("Baseline Performance (Control Model)")
+    fig, ax = setup_plot("ResMLP Design Space: Baseline Performance (No Ablation)")
     
     depths, widths = zip(*architectures)
     
@@ -237,7 +237,7 @@ def plot_baseline_performance(architectures: list, metrics: dict, output_file: P
 
 def plot_ablation_effects(architectures: list, metrics: dict, trial_results: dict, output_file: Path):
     """Plot ablation effects with statistical significance."""
-    fig, ax = setup_plot("Ablation Effects (Statistical Significance)")
+    fig, ax = setup_plot("ResMLP Design Space: Ablation Effects (Accuracy Change vs. None)")
     
     for depth, width in architectures:
         arch_key = f"{depth}x{width}"
@@ -307,7 +307,7 @@ def plot_ablation_effects(architectures: list, metrics: dict, trial_results: dic
 
 def plot_instability(architectures: list, metrics: dict, output_file: Path):
     """Plot instability (max standard deviation across modes)."""
-    fig, ax = setup_plot("Instability (Max Std across Six Ablation Modes)")
+    fig, ax = setup_plot("ResMLP Design Space: Training Instability (Std Dev of Accuracy)")
     
     # Create custom colormap for instability
     from matplotlib.colors import LinearSegmentedColormap
@@ -363,7 +363,7 @@ def plot_instability(architectures: list, metrics: dict, output_file: Path):
 
 def plot_winning_strategy(architectures: list, metrics: dict, output_file: Path):
     """Plots a categorical map showing which mode had the highest mean accuracy."""
-    title = 'SimpleMLP Design Space: Winning Strategy Map'
+    title = 'ResMLP Design Space: Winning Strategy Map'
     fig, ax = setup_plot(title)
     
     depths = np.array([arch[0] for arch in architectures])
@@ -420,7 +420,7 @@ def plot_winning_strategy(architectures: list, metrics: dict, output_file: Path)
 
 def plot_parameter_matching(architectures: list, output_file: Path):
     """Plots parameter counts across architectures to show parameter matching between different designs."""
-    title = 'SimpleMLP Design Space: Parameter Matching & Asymmetries'
+    title = 'ResMLP Design Space: Parameter Matching & Asymmetries'
     fig, ax = setup_plot(title)
 
     depths = [arch[0] for arch in architectures]
@@ -796,7 +796,7 @@ def plot_parameter_matching(architectures: list, output_file: Path):
 
 def plot_regimes(architectures: list, metrics: dict, output_file: Path):
     """Plots training regimes based on performance patterns."""
-    title = 'SimpleMLP Design Space: Training Regimes'
+    title = 'ResMLP Design Space: Training Regimes'
     fig, ax = setup_plot(title)
     
     depths = [arch[0] for arch in architectures]
@@ -1012,14 +1012,10 @@ def plot_regimes(architectures: list, metrics: dict, output_file: Path):
     save_and_close(fig, output_file)
 
 def main():
-    """Main function to parse arguments and generate all heat map visualizations."""
-    parser = argparse.ArgumentParser(description="Generate a suite of heat map visualizations for SimpleMLP PSA results.")
-    parser.add_argument('--config-file', type=Path, default=Path('reproduction/configurations.txt'),
-                        help="Path to the architecture configurations file.")
-    parser.add_argument('--trials-file', type=Path, default=Path('results/psa_resmlp_trials.md'),
-                        help="Path to the markdown file with raw trial data.")
-    parser.add_argument('--output-dir', type=Path, default=Path('results/'),
-                        help="Directory to save the output PNG files.")
+    """Main function to generate all heatmaps."""
+    parser = argparse.ArgumentParser(description="Generate a suite of heat map visualizations for ResMLP PSA results.")
+    parser.add_argument("--input-dir", type=Path, default=Path("results"), help="Directory containing the summary and trial markdown files.")
+    parser.add_argument("--output-dir", type=Path, default=Path("results"), help="Directory to save the heatmap PNG files.")
     args = parser.parse_args()
 
     # --- Load and Process Data ---
@@ -1041,12 +1037,12 @@ def main():
     print("--- Generating Plots ---")
 
     # --- Generate and Save Plots ---
-    plot_baseline_performance(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Baseline_Performance.png')
-    plot_ablation_effects(architectures, metrics, trial_results, args.output_dir / 'SimpleMLP_Heatmap_Ablation_Effects.png')
-    plot_instability(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Instability.png')
-    plot_winning_strategy(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Winning_Strategy.png')
-    plot_parameter_matching(architectures, args.output_dir / 'SimpleMLP_Heatmap_Parameter_Matching.png')
-    plot_regimes(architectures, metrics, args.output_dir / 'SimpleMLP_Heatmap_Regimes.png')
+    plot_baseline_performance(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Baseline_Performance.png')
+    plot_ablation_effects(architectures, metrics, trial_results, args.output_dir / 'ResMLP_Heatmap_Ablation_Effects.png')
+    plot_instability(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Instability.png')
+    plot_winning_strategy(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Winning_Strategy.png')
+    plot_parameter_matching(architectures, args.output_dir / 'ResMLP_Heatmap_Parameter_Matching.png')
+    plot_regimes(architectures, metrics, args.output_dir / 'ResMLP_Heatmap_Regimes.png')
 
     print("--- Visualization Generation Complete ---")
 

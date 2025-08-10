@@ -43,7 +43,7 @@ export PATH="$HOME/.local/bin:$PATH"
 ## Project Structure
 
 ### ResMLP Architecture
-The study uses a **Residual Multi-Layer Perceptron (ResMLP)** architecture with skip connections to solve the vanishing gradient problem that limited the original SimpleMLP experiments. This allows testing of much deeper architectures that were previously untrainable.
+The study uses a **Residual Multi-Layer Perceptron (ResMLP)** architecture with skip connections to solve the vanishing gradient problem that limited the original ResMLP experiments. This allows testing of much deeper architectures that were previously untrainable.
 
 ```
 ├── src/                    # Source code
@@ -219,12 +219,14 @@ poetry run make-trial-accuracy-table    # Experimental results with statistics
 ```bash
 poetry run make-design-space-figure     # Design space scatter plot
 poetry run make-figure-heatmaps         # Six comprehensive heatmap visualizations
-poetry run make-convergence-plots       # Convergence plots showing validation accuracy over meta-loops (SimpleMLP_Plot_Convergence.png) - use 1*1024,18*18 format
+*Optional: Visualize the results*
+```bash
+poetry run make-convergence-plots       # Convergence plots showing validation accuracy over meta-loops (ResMLP_Plot_Convergence.png) - use 1*1024,18*18 format
 ```
 
 **Regime Classification:**
 ```bash
-python -c "from scripts.regime_classifier import get_all_regime_classifications; print(get_all_regime_classifications('reproduction/configurations.txt', 'results/psa_simplemlp_trials.md'))"
+python -c "from scripts.regime_classifier import get_all_regime_classifications; print(get_all_regime_classifications('reproduction/configurations.txt', 'results/psa_resmlp_trials.md'))"
 ```
 
 **Reproduction Tools:**
@@ -247,10 +249,12 @@ poetry run sagemaker-logs-parser
 - AWS credentials configured
 - `.env` file with AWS configuration in `aws/sagemaker/` (copy from `.env.example`)
 
-**Output Files:**
-- `results/psa_simplemlp_summary.md` - Statistical summary of all experiments
-- `results/psa_simplemlp_trials.md` - Raw trial data in markdown tables
-- `results/sagemaker_cost_report.json` - Detailed cost analysis
+### Key Outputs
+
+- `results/psa_resmlp_summary.md` - Statistical summary of all experiments
+- `results/psa_resmlp_trials.md` - Raw trial data in markdown tables
+- `results/ResMLP_Heatmap_Regimes.png` - A data-driven heatmap classifying architectures into training regimes
+- `results/ResMLP_Plot_Convergence.png` - Convergence plots for specified architectures
 
 ## Documentation
 
