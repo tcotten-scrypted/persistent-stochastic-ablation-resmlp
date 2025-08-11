@@ -17,6 +17,7 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 import shutil
+import importlib.util
 
 # Add the src directory to sys.path to allow importing the trainer
 src_dir = Path(__file__).parent.parent / "src"
