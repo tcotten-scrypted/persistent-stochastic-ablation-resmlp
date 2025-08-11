@@ -9,6 +9,8 @@
 # Core Concepts:
 # 1. Six Ablation Modes:
 #    - 'none': Control group.
+#    - 'decay': Traditional weight decay regularization
+#    - 'dropout': Traditional dropout regularization
 #    - 'full': Partially ablates a neuron in ANY linear layer (hidden or output).
 #    - 'hidden': Fully ablates a neuron in a HIDDEN layer only.
 #    - 'output': Partially ablates a neuron in the OUTPUT layer only.
@@ -271,22 +273,31 @@ class ResMLP(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.flatten(x)
         
-        # Handle dropout layers based on ablation mode
-        if self.config.ABLATION_MODE != "dropout":
-            # Temporarily set all dropout layers to eval mode
-            dropout_layers = [layer for layer in self.layer_stack if isinstance(layer, nn.Dropout)]
-            original_modes = [layer.training for layer in dropout_layers]
-            for layer in dropout_layers:
-                layer.eval()
-        
+        # --- Start of Fix ---
+        dropout_layers = []
+        original_modes = []
+
+        # If the mode is NOT dropout, we need to find and disable all dropout layers
+        if self.config.ABLATION_MODE != 'dropout':
+            # Recursively find ALL nn.Dropout modules in the entire model
+            for module in self.modules():
+                if isinstance(module, nn.Dropout):
+                    dropout_layers.append(module)
+                    original_modes.append(module.training) # Store its original state
+                    module.eval() # Set to eval mode to disable it
+        # --- End of Fix ---
+
+        # The forward pass itself remains the same
         for layer in self.layer_stack:
             x = layer(x)
         
-        # Restore original training modes
-        if self.config.ABLATION_MODE != "dropout":
+        # --- Start of Fix ---
+        # Restore the original training state of the dropout layers
+        if self.config.ABLATION_MODE != 'dropout':
             for layer, original_mode in zip(dropout_layers, original_modes):
                 layer.train(original_mode)
-        
+        # --- End of Fix ---
+                
         return x
 
 
